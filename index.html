@@ -3,24 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" 
-          content="IE=edge">
-    <meta name="viewport" 
-          content="width=device-width, initial-scale=1.0">
-    <title>
-        Build a Survey Form using HTML and CSS
-    </title>
-
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environmental Survey Form</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Styling the Body element 
-        i.e. Color, Font, Alignment */
         body {
             background-color: #05c46b;
             font-family: Verdana;
             text-align: center;
         }
 
-        /* Styling the Form (Color, Padding, Shadow) */
         form {
             background-color: #fff;
             max-width: 500px;
@@ -29,20 +22,16 @@
             box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.5);
         }
 
-        /* Styling form-control Class */
         .form-control {
             text-align: left;
             margin-bottom: 25px;
         }
 
-        /* Styling form-control Label */
         .form-control label {
             display: block;
             margin-bottom: 10px;
         }
 
-        /* Styling form-control input, 
-        select, textarea */
         .form-control input,
         .form-control select,
         .form-control textarea {
@@ -54,15 +43,12 @@
             width: 95%;
         }
 
-        /* Styling form-control Radio 
-        button and Checkbox */
         .form-control input[type="radio"],
         .form-control input[type="checkbox"] {
             display: inline-block;
             width: auto;
         }
 
-        /* Styling Button */
         button {
             background-color: #05c46b;
             border: 1px solid #777;
@@ -80,323 +66,65 @@
 <body>
     <h1>Environmental Survey Form</h1>
 
-    <!-- Create Form -->
     <form id="form">
-
-        <!-- Details -->
         <div class="form-control">
-            <label for="name" id="label-name">
-                Name
-            </label>
-
-            <!-- Input Type Text -->
-            <input type="text" id="name" 
-                   placeholder="Enter your name" />
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="Enter your name" />
         </div>
 
-
         <div class="form-control">
-            <label>
-                1.	Where did you spend most of your life growing up in an urban, suburban, or rural area
-            </label>
-
-            <!-- Input Type Radio Button -->
-            <label for="recommed-1">
-                <input type="radio" id="recommed-1" 
-                       name="recommed">Rural
-                  </input>
-            </label>
-            <label for="recommed-2">
-                <input type="radio" id="recommed-2" 
-                       name="recommed">Suburban
-                  </input>
-            </label>
-            <label for="recommed-3">
-                <input type="radio" id="recommed-3" 
-                       name="recommed">Urban
-                  </input>
-            </label>
-        </div>
-        <div class="form-control">
-            <label>
-                2.	What is your household family income growing up (0-50,000, 50,000-100,000, over 100,000)
-            </label>
-
-            <!-- Input Type Radio Button -->
-            <label for="recommed-1">
-                <input type="radio" id="recommed-1" 
-                       name="recommed">$0-50,000
-                  </input>
-            </label>
-            <label for="recommed-2">
-                <input type="radio" id="recommed-2" 
-                       name="recommed">$50,000-$100,000
-                  </input>
-            </label>
-            <label for="recommed-3">
-                <input type="radio" id="recommed-3" 
-                       name="recommed">Over $100,000
-                  </input>
-            </label>
-        </div>
-        <div class="form-control">
-            <label>
-                3.	How often was environmental issues highlighted in your school acivtities, rarely, never, always, 
-            </label>
-
-            <!-- Input Type Radio Button -->
-            <label for="recommed-1">
-                <input type="radio" id="recommed-1" 
-                       name="recommed">Always
-                  </input>
-            </label>
-            <label for="recommed-2">
-                <input type="radio" id="recommed-2" 
-                       name="recommed">Rarely
-                  </input>
-            </label>
-            <label for="recommed-3">
-                <input type="radio" id="recommed-3" 
-                       name="recommed">Never
-                  </input>
-            </label>
-        </div>
-        <div class="form-control">
-            <label>
-                3.	How often was environmental issues highlighted in your school acivtities, rarely, never, always, 
-            </label>
-
-            <!-- Input Type Radio Button -->
-            <label for="recommed-1">
-                <input type="radio" id="recommed-1" 
-                       name="recommed">Always
-                  </input>
-            </label>
-            <label for="recommed-2">
-                <input type="radio" id="recommed-2" 
-                       name="recommed">Rarely
-                  </input>
-            </label>
-            <label for="recommed-3">
-                <input type="radio" id="recommed-3" 
-                       name="recommed">Never
-                  </input>
-            </label>
-        </div>
-        <div class="form-control">
-            <label>
-                4.	Growing up, how frequently did you try to recycle or reduce waste?
-            </label>
-
-            <!-- Input Type Radio Button -->
-            <label for="recommed-1">
-                <input type="radio" id="recommed-1" 
-                       name="recommed">Often
-                  </input>
-            </label>
-            <label for="recommed-2">
-                <input type="radio" id="recommed-2" 
-                       name="recommed">Sometimes
-                  </input>
-            </label>
-            <label for="recommed-3">
-                <input type="radio" id="recommed-3" 
-                       name="recommed">Rarely
-                  </input>
-            <label for="recommed-4">
-                <input type="radio" id="recommed-4" 
-                        name="recommed">Never
-                  </input>
-            </label>
-        </div>
-        <div class="form-control">
-            <label>
-                5.	How often did your family emphasize environmental concerns while growing up?
-            </label>
-
-            <!-- Input Type Radio Button -->
-            <label for="recommed-1">
-                <input type="radio" id="recommed-1" 
-                       name="recommed">Often
-                  </input>
-            </label>
-            <label for="recommed-2">
-                <input type="radio" id="recommed-2" 
-                       name="recommed">Sometimes
-                  </input>
-            </label>
-            <label for="recommed-3">
-                <input type="radio" id="recommed-3" 
-                       name="recommed">Rarely
-                  </input>
-            <label for="recommed-4">
-                <input type="radio" id="recommed-4" 
-                        name="recommed">Never
-                  </input>
-            </label>
-        </div>
-        <div class="form-control">
-            <label>
-                6.	While growing up, how often your values/religion/culture influence your environmental perceptions
-            </label>
-
-            <!-- Input Type Radio Button -->
-            <label for="recommed-1">
-                <input type="radio" id="recommed-1" 
-                       name="recommed">Often
-                  </input>
-            </label>
-            <label for="recommed-2">
-                <input type="radio" id="recommed-2" 
-                       name="recommed">Sometimes
-                  </input>
-            </label>
-            <label for="recommed-3">
-                <input type="radio" id="recommed-3" 
-                       name="recommed">Rarely
-                  </input>
-            <label for="recommed-4">
-                <input type="radio" id="recommed-4" 
-                        name="recommed">Never
-                  </input>
-            </label>
-        </div>
-        <div class="form-control">
-            <label>
-                7.	How often did you engage in outdoor activities such as parks, hiking, gardening, as a child? 
-            </label>
-
-            <!-- Input Type Radio Button -->
-            <label for="recommed-1">
-                <input type="radio" id="recommed-1" 
-                       name="recommed">Often
-                  </input>
-            </label>
-            <label for="recommed-2">
-                <input type="radio" id="recommed-2" 
-                       name="recommed">Sometimes
-                  </input>
-            </label>
-            <label for="recommed-3">
-                <input type="radio" id="recommed-3" 
-                       name="recommed">Rarely
-                  </input>
-            <label for="recommed-4">
-                <input type="radio" id="recommed-4" 
-                        name="recommed">Never
-                  </input>
-            </label>
-        </div>
-        <div class="form-control">
-            <label>
-                8.	In the last two years, how frequently today have you engaged in activities relating to the environment? 
-            </label>
-
-            <!-- Input Type Radio Button -->
-            <label for="recommed-1">
-                <input type="radio" id="recommed-1" 
-                       name="recommed">Often
-                  </input>
-            </label>
-            <label for="recommed-2">
-                <input type="radio" id="recommed-2" 
-                       name="recommed">Sometimes
-                  </input>
-            </label>
-            <label for="recommed-3">
-                <input type="radio" id="recommed-3" 
-                       name="recommed">Rarely
-                  </input>
-            <label for="recommed-4">
-                <input type="radio" id="recommed-4" 
-                        name="recommed">Never
-                  </input>
-            </label>
-        </div>
-        <div class="form-control">
-            <label>
-                9.	How frequently do you recycle everyday items?
-            </label>
-
-            <!-- Input Type Radio Button -->
-            <label for="recommed-1">
-                <input type="radio" id="recommed-1" 
-                       name="recommed">Often
-                  </input>
-            </label>
-            <label for="recommed-2">
-                <input type="radio" id="recommed-2" 
-                       name="recommed">Sometimes
-                  </input>
-            </label>
-            <label for="recommed-3">
-                <input type="radio" id="recommed-3" 
-                       name="recommed">Rarely
-                  </input>
-            <label for="recommed-4">
-                <input type="radio" id="recommed-4" 
-                        name="recommed">Never
-                  </input>
-            </label>
-        </div>
-        <div class="form-control">
-            <label>
-                10.	How frequently do you engage or participate in listening to environmental concerns?
-            </label>
-
-            <!-- Input Type Radio Button -->
-            <label for="recommed-1">
-                <input type="radio" id="recommed-1" 
-                       name="recommed">Often
-                  </input>
-            </label>
-            <label for="recommed-2">
-                <input type="radio" id="recommed-2" 
-                       name="recommed">Sometimes
-                  </input>
-            </label>
-            <label for="recommed-3">
-                <input type="radio" id="recommed-3" 
-                       name="recommed">Rarely
-                  </input>
-            <label for="recommed-4">
-                <input type="radio" id="recommed-4" 
-                        name="recommed">Never
-                  </input>
-            </label>
-        </div>
-        <div class="form-control">
-            <label>
-                11.	How concerned are you about environmental issues today?
-            </label>
-
-            <!-- Input Type Radio Button -->
-            <label for="recommed-1">
-                <input type="radio" id="recommed-1" 
-                       name="recommed">Very Concerned
-                  </input>
-            </label>
-            <label for="recommed-2">
-                <input type="radio" id="recommed-2" 
-                       name="recommed">Moderately Concerned
-                  </input>
-            </label>
-            <label for="recommed-3">
-                <input type="radio" id="recommed-3" 
-                       name="recommed">A Little Concerned
-                  </input>
-            <label for="recommed-4">
-                <input type="radio" id="recommed-4" 
-                        name="recommed">Not Concerned
-                  </input>
-            </label>
+            <label>1. Where did you spend most of your life growing up?</label>
+            <label><input type="radio" name="q1" value="Rural"> Rural</label>
+            <label><input type="radio" name="q1" value="Suburban"> Suburban</label>
+            <label><input type="radio" name="q1" value="Urban"> Urban</label>
         </div>
 
-
-        <!-- Multi-line Text Input Control -->
-        <button type="submit" value="submit">
-            Submit
-        </button>
+        <button type="submit">Submit</button>
     </form>
+
+    <canvas id="resultsChart" width="400" height="400" style="display:none; margin: 0 auto;"></canvas>
+
+    <script>
+        const form = document.getElementById("form");
+        const canvas = document.getElementById("resultsChart");
+        let chartInstance = null;
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const counts = {
+                "Rural": 0,
+                "Suburban": 0,
+                "Urban": 0
+            };
+
+            const answer = formData.get("q1");
+            if (answer && counts.hasOwnProperty(answer)) {
+                counts[answer]++;
+            }
+
+            canvas.style.display = "block";
+
+            const data = {
+                labels: Object.keys(counts),
+                datasets: [{
+                    label: "Q1 - Area You Grew Up In",
+                    data: Object.values(counts),
+                    backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"]
+                }]
+            };
+
+            if (chartInstance) chartInstance.destroy();
+
+            chartInstance = new Chart(canvas, {
+                type: "pie",
+                data: data
+            });
+        });
+    </script>
 </body>
+
 </html>
+
+
