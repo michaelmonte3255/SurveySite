@@ -32,19 +32,7 @@
             margin-bottom: 10px;
         }
 
-        .form-control input,
-        .form-control select,
-        .form-control textarea {
-            border: 1px solid #777;
-            border-radius: 2px;
-            font-family: inherit;
-            padding: 10px;
-            display: block;
-            width: 95%;
-        }
-
-        .form-control input[type="radio"],
-        .form-control input[type="checkbox"] {
+        .form-control input[type="radio"] {
             display: inline-block;
             width: auto;
         }
@@ -79,6 +67,84 @@
             <label><input type="radio" name="q1" value="Urban"> Urban</label>
         </div>
 
+        <div class="form-control">
+            <label>2. What is your household family income growing up?</label>
+            <label><input type="radio" name="q2" value="$0-50,000"> $0-50,000</label>
+            <label><input type="radio" name="q2" value="$50,000-$100,000"> $50,000-$100,000</label>
+            <label><input type="radio" name="q2" value="Over $100,000"> Over $100,000</label>
+        </div>
+
+        <div class="form-control">
+            <label>3. How often were environmental issues highlighted in your school activities?</label>
+            <label><input type="radio" name="q3" value="Always"> Always</label>
+            <label><input type="radio" name="q3" value="Rarely"> Rarely</label>
+            <label><input type="radio" name="q3" value="Never"> Never</label>
+        </div>
+
+        <div class="form-control">
+            <label>4. Growing up, how frequently did you try to recycle or reduce waste?</label>
+            <label><input type="radio" name="q4" value="Often"> Often</label>
+            <label><input type="radio" name="q4" value="Sometimes"> Sometimes</label>
+            <label><input type="radio" name="q4" value="Rarely"> Rarely</label>
+            <label><input type="radio" name="q4" value="Never"> Never</label>
+        </div>
+
+        <div class="form-control">
+            <label>5. How often did your family emphasize environmental concerns while growing up?</label>
+            <label><input type="radio" name="q5" value="Often"> Often</label>
+            <label><input type="radio" name="q5" value="Sometimes"> Sometimes</label>
+            <label><input type="radio" name="q5" value="Rarely"> Rarely</label>
+            <label><input type="radio" name="q5" value="Never"> Never</label>
+        </div>
+
+        <div class="form-control">
+            <label>6. While growing up, how often did your values/religion/culture influence your environmental perceptions?</label>
+            <label><input type="radio" name="q6" value="Often"> Often</label>
+            <label><input type="radio" name="q6" value="Sometimes"> Sometimes</label>
+            <label><input type="radio" name="q6" value="Rarely"> Rarely</label>
+            <label><input type="radio" name="q6" value="Never"> Never</label>
+        </div>
+
+        <div class="form-control">
+            <label>7. How often did you engage in outdoor activities as a child?</label>
+            <label><input type="radio" name="q7" value="Often"> Often</label>
+            <label><input type="radio" name="q7" value="Sometimes"> Sometimes</label>
+            <label><input type="radio" name="q7" value="Rarely"> Rarely</label>
+            <label><input type="radio" name="q7" value="Never"> Never</label>
+        </div>
+
+        <div class="form-control">
+            <label>8. In the last two years, how frequently have you engaged in activities relating to the environment?</label>
+            <label><input type="radio" name="q8" value="Often"> Often</label>
+            <label><input type="radio" name="q8" value="Sometimes"> Sometimes</label>
+            <label><input type="radio" name="q8" value="Rarely"> Rarely</label>
+            <label><input type="radio" name="q8" value="Never"> Never</label>
+        </div>
+
+        <div class="form-control">
+            <label>9. How frequently do you recycle everyday items?</label>
+            <label><input type="radio" name="q9" value="Often"> Often</label>
+            <label><input type="radio" name="q9" value="Sometimes"> Sometimes</label>
+            <label><input type="radio" name="q9" value="Rarely"> Rarely</label>
+            <label><input type="radio" name="q9" value="Never"> Never</label>
+        </div>
+
+        <div class="form-control">
+            <label>10. How frequently do you engage in listening to environmental concerns?</label>
+            <label><input type="radio" name="q10" value="Often"> Often</label>
+            <label><input type="radio" name="q10" value="Sometimes"> Sometimes</label>
+            <label><input type="radio" name="q10" value="Rarely"> Rarely</label>
+            <label><input type="radio" name="q10" value="Never"> Never</label>
+        </div>
+
+        <div class="form-control">
+            <label>11. How concerned are you about environmental issues today?</label>
+            <label><input type="radio" name="q11" value="Very Concerned"> Very Concerned</label>
+            <label><input type="radio" name="q11" value="Moderately Concerned"> Moderately Concerned</label>
+            <label><input type="radio" name="q11" value="A Little Concerned"> A Little Concerned</label>
+            <label><input type="radio" name="q11" value="Not Concerned"> Not Concerned</label>
+        </div>
+
         <button type="submit">Submit</button>
     </form>
 
@@ -93,13 +159,13 @@
             e.preventDefault();
 
             const formData = new FormData(form);
+            const answer = formData.get("q1");
             const counts = {
                 "Rural": 0,
                 "Suburban": 0,
                 "Urban": 0
             };
 
-            const answer = formData.get("q1");
             if (answer && counts.hasOwnProperty(answer)) {
                 counts[answer]++;
             }
