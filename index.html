@@ -14,7 +14,12 @@
             text-align: center;
         }
 
-        form {
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
             background-color: #fff;
             max-width: 500px;
             margin: 50px auto;
@@ -45,7 +50,7 @@
             font-size: 21px;
             display: block;
             width: 100%;
-            margin-top: 50px;
+            margin-top: 30px;
             margin-bottom: 20px;
         }
     </style>
@@ -55,97 +60,7 @@
     <h1>Environmental Survey Form</h1>
 
     <form id="form">
-        <div class="form-control">
-            <label for="name">Name</label>
-            <input type="text" id="name" placeholder="Enter your name" />
-        </div>
-
-        <div class="form-control">
-            <label>1. Where did you spend most of your life growing up?</label>
-            <label><input type="radio" name="q1" value="Rural"> Rural</label>
-            <label><input type="radio" name="q1" value="Suburban"> Suburban</label>
-            <label><input type="radio" name="q1" value="Urban"> Urban</label>
-        </div>
-
-        <div class="form-control">
-            <label>2. What is your household family income growing up?</label>
-            <label><input type="radio" name="q2" value="$0-50,000"> $0-50,000</label>
-            <label><input type="radio" name="q2" value="$50,000-$100,000"> $50,000-$100,000</label>
-            <label><input type="radio" name="q2" value="Over $100,000"> Over $100,000</label>
-        </div>
-
-        <div class="form-control">
-            <label>3. How often were environmental issues highlighted in your school activities?</label>
-            <label><input type="radio" name="q3" value="Always"> Always</label>
-            <label><input type="radio" name="q3" value="Rarely"> Rarely</label>
-            <label><input type="radio" name="q3" value="Never"> Never</label>
-        </div>
-
-        <div class="form-control">
-            <label>4. Growing up, how frequently did you try to recycle or reduce waste?</label>
-            <label><input type="radio" name="q4" value="Often"> Often</label>
-            <label><input type="radio" name="q4" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="q4" value="Rarely"> Rarely</label>
-            <label><input type="radio" name="q4" value="Never"> Never</label>
-        </div>
-
-        <div class="form-control">
-            <label>5. How often did your family emphasize environmental concerns while growing up?</label>
-            <label><input type="radio" name="q5" value="Often"> Often</label>
-            <label><input type="radio" name="q5" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="q5" value="Rarely"> Rarely</label>
-            <label><input type="radio" name="q5" value="Never"> Never</label>
-        </div>
-
-        <div class="form-control">
-            <label>6. While growing up, how often did your values/religion/culture influence your environmental perceptions?</label>
-            <label><input type="radio" name="q6" value="Often"> Often</label>
-            <label><input type="radio" name="q6" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="q6" value="Rarely"> Rarely</label>
-            <label><input type="radio" name="q6" value="Never"> Never</label>
-        </div>
-
-        <div class="form-control">
-            <label>7. How often did you engage in outdoor activities as a child?</label>
-            <label><input type="radio" name="q7" value="Often"> Often</label>
-            <label><input type="radio" name="q7" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="q7" value="Rarely"> Rarely</label>
-            <label><input type="radio" name="q7" value="Never"> Never</label>
-        </div>
-
-        <div class="form-control">
-            <label>8. In the last two years, how frequently have you engaged in activities relating to the environment?</label>
-            <label><input type="radio" name="q8" value="Often"> Often</label>
-            <label><input type="radio" name="q8" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="q8" value="Rarely"> Rarely</label>
-            <label><input type="radio" name="q8" value="Never"> Never</label>
-        </div>
-
-        <div class="form-control">
-            <label>9. How frequently do you recycle everyday items?</label>
-            <label><input type="radio" name="q9" value="Often"> Often</label>
-            <label><input type="radio" name="q9" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="q9" value="Rarely"> Rarely</label>
-            <label><input type="radio" name="q9" value="Never"> Never</label>
-        </div>
-
-        <div class="form-control">
-            <label>10. How frequently do you engage in listening to environmental concerns?</label>
-            <label><input type="radio" name="q10" value="Often"> Often</label>
-            <label><input type="radio" name="q10" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="q10" value="Rarely"> Rarely</label>
-            <label><input type="radio" name="q10" value="Never"> Never</label>
-        </div>
-
-        <div class="form-control">
-            <label>11. How concerned are you about environmental issues today?</label>
-            <label><input type="radio" name="q11" value="Very Concerned"> Very Concerned</label>
-            <label><input type="radio" name="q11" value="Moderately Concerned"> Moderately Concerned</label>
-            <label><input type="radio" name="q11" value="A Little Concerned"> A Little Concerned</label>
-            <label><input type="radio" name="q11" value="Not Concerned"> Not Concerned</label>
-        </div>
-
-        <button type="submit">Submit</button>
+        <!-- Steps generated dynamically with JavaScript -->
     </form>
 
     <canvas id="resultsChart" width="400" height="400" style="display:none; margin: 0 auto;"></canvas>
@@ -153,44 +68,156 @@
     <script>
         const form = document.getElementById("form");
         const canvas = document.getElementById("resultsChart");
+        let currentStep = 0;
         let chartInstance = null;
 
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            const formData = new FormData(form);
-            const answer = formData.get("q1");
-            const counts = {
-                "Rural": 0,
-                "Suburban": 0,
-                "Urban": 0
-            };
-
-            if (answer && counts.hasOwnProperty(answer)) {
-                counts[answer]++;
+        const questions = [
+            {
+                key: "q1",
+                text: "1. Where did you spend most of your life growing up?",
+                options: ["Rural", "Suburban", "Urban"]
+            },
+            {
+                key: "q2",
+                text: "2. What is your household family income growing up?",
+                options: ["$0-50,000", "$50,000-$100,000", "Over $100,000"]
+            },
+            {
+                key: "q3",
+                text: "3. How often were environmental issues highlighted in your school activities?",
+                options: ["Always", "Rarely", "Never"]
+            },
+            {
+                key: "q4",
+                text: "4. Growing up, how frequently did you try to recycle or reduce waste?",
+                options: ["Often", "Sometimes", "Rarely", "Never"]
+            },
+            {
+                key: "q5",
+                text: "5. How often did your family emphasize environmental concerns while growing up?",
+                options: ["Often", "Sometimes", "Rarely", "Never"]
+            },
+            {
+                key: "q6",
+                text: "6. While growing up, how often did your values/religion/culture influence your environmental perceptions?",
+                options: ["Often", "Sometimes", "Rarely", "Never"]
+            },
+            {
+                key: "q7",
+                text: "7. How often did you engage in outdoor activities as a child?",
+                options: ["Often", "Sometimes", "Rarely", "Never"]
+            },
+            {
+                key: "q8",
+                text: "8. In the last two years, how frequently have you engaged in activities relating to the environment?",
+                options: ["Often", "Sometimes", "Rarely", "Never"]
+            },
+            {
+                key: "q9",
+                text: "9. How frequently do you recycle everyday items?",
+                options: ["Often", "Sometimes", "Rarely", "Never"]
+            },
+            {
+                key: "q10",
+                text: "10. How frequently do you engage in listening to environmental concerns?",
+                options: ["Often", "Sometimes", "Rarely", "Never"]
+            },
+            {
+                key: "q11",
+                text: "11. How concerned are you about environmental issues today?",
+                options: ["Very Concerned", "Moderately Concerned", "A Little Concerned", "Not Concerned"]
             }
+        ];
 
-            canvas.style.display = "block";
+        // Dynamically build form steps
+        questions.forEach((q, index) => {
+            const stepDiv = document.createElement("div");
+            stepDiv.classList.add("form-step");
+            if (index === 0) stepDiv.classList.add("active");
+            stepDiv.setAttribute("data-step", index + 1);
+
+            const control = document.createElement("div");
+            control.classList.add("form-control");
+
+            const label = document.createElement("label");
+            label.textContent = q.text;
+            control.appendChild(label);
+
+            q.options.forEach(opt => {
+                const optionLabel = document.createElement("label");
+                const radio = document.createElement("input");
+                radio.type = "radio";
+                radio.name = q.key;
+                radio.value = opt;
+                optionLabel.appendChild(radio);
+                optionLabel.append(" " + opt);
+                control.appendChild(optionLabel);
+            });
+
+            stepDiv.appendChild(control);
+
+            const nextBtn = document.createElement("button");
+            nextBtn.type = "button";
+            nextBtn.textContent = index === questions.length - 1 ? "Finish" : "Next";
+            nextBtn.classList.add("next-btn");
+            stepDiv.appendChild(nextBtn);
+
+            form.insertBefore(stepDiv, form.lastElementChild);
+        });
+
+        const steps = document.querySelectorAll(".form-step");
+
+        function showStep(index) {
+            steps.forEach((step, i) => {
+                step.classList.toggle("active", i === index);
+            });
+            canvas.style.display = "none";
+        }
+
+        function collectAndShowChart(qKey) {
+            const formData = new FormData(form);
+            const value = formData.get(qKey);
+            if (!value) return;
+
+            const counts = {};
+            document.querySelectorAll(`input[name="${qKey}"]`).forEach(input => {
+                counts[input.value] = 0;
+            });
+            if (counts.hasOwnProperty(value)) counts[value]++;
 
             const data = {
                 labels: Object.keys(counts),
                 datasets: [{
-                    label: "Q1 - Area You Grew Up In",
+                    label: qKey,
                     data: Object.values(counts),
-                    backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"]
+                    backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"]
                 }]
             };
 
             if (chartInstance) chartInstance.destroy();
-
             chartInstance = new Chart(canvas, {
                 type: "pie",
                 data: data
             });
+            canvas.style.display = "block";
+        }
+
+        document.querySelectorAll(".next-btn").forEach((btn, index) => {
+            btn.addEventListener("click", () => {
+                const qKey = questions[index].key;
+                collectAndShowChart(qKey);
+                currentStep++;
+                setTimeout(() => showStep(currentStep), 2000);
+            });
         });
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            alert("Thank you for submitting the survey!");
+        });
+
+        showStep(currentStep);
     </script>
 </body>
 
 </html>
-
-
