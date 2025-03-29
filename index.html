@@ -175,18 +175,21 @@
         }
 
         function collectAndShowChart(qKey) {
-            const selected = form.querySelector(`input[name="${qKey}"]:checked`);
-            if (!selected) {
-                alert("Please select an option before continuing.");
-                return false;
-            }
+            const formData = new FormData(form);
+            const value = formData.get(qKey);
+            if (!value) return;
 
-            // Create chart with selected answer only
+            const counts = {};
+            document.querySelectorAll(input[name="${qKey}"]).forEach(input => {
+                counts[input.value] = 0;
+            });
+            if (counts.hasOwnProperty(value)) counts[value]++;
+
             const data = {
-                labels: [selected.value],
+                labels: Object.keys(counts),
                 datasets: [{
                     label: qKey,
-                    data: [1],
+                    data: Object.values(counts),
                     backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"]
                 }]
             };
@@ -194,40 +197,27 @@
             if (chartInstance) chartInstance.destroy();
             chartInstance = new Chart(canvas, {
                 type: "pie",
-                data: data,
-                options: {
-                    plugins: {
-                        legend: {
-                            display: true
-                        }
-                    }
-                }
+                data: data
             });
-
             canvas.style.display = "block";
-            return true;
         }
 
         document.querySelectorAll(".next-btn").forEach((btn, index) => {
             btn.addEventListener("click", () => {
                 const qKey = questions[index].key;
-                const isValid = collectAndShowChart(qKey);
-                if (!isValid) return;
-
-                setTimeout(() => {
-                    currentStep++;
-                    if (currentStep < questions.length) {
-                        showStep(currentStep);
-                    } else {
-                        form.innerHTML = "<h2>Thank you for submitting the survey!</h2>";
-                        canvas.style.display = "none";
-                    }
-                }, 1500);
+                collectAndShowChart(qKey);
+                currentStep++;
+                setTimeout(() => showStep(currentStep), 2000);
             });
+        });
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            alert("Thank you for submitting the survey!");
         });
 
         showStep(currentStep);
     </script>
 </body>
 
-</html>
+</html
