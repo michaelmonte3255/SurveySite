@@ -204,19 +204,47 @@
 
         document.querySelectorAll(".next-btn").forEach((btn, index) => {
             btn.addEventListener("click", () => {
-                const qKey = questions[index].key;
-                collectAndShowChart(qKey);
-                currentStep++;
-                setTimeout(() => showStep(currentStep), 2000);
+            const qKey = questions[index].key;
+
+            const selected = form.querySelector(`input[name="${qKey}"]:checked`);
+            if (!selected) {
+                alert("Please select an option before continuing.");
+                return;
+            }
+
+        // Chart: Only for visual feedback of selected answer
+            const data = {
+                labels: [selected.value],
+                datasets: [{
+                    label: qKey,
+                    data: [1],
+                    backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"]
+                }]
+            };
+
+            if (chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(canvas, {
+                type: "pie",
+                data: data,
+                options: {
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    }
+                }
             });
-        });
 
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            alert("Thank you for submitting the survey!");
-        });
+            canvas.style.display = "block";
 
-        showStep(currentStep);
+        // Delay step transition to show chart
+            setTimeout(() => {
+                currentStep++;
+                showStep(currentStep);
+            }, 1500); // 1.5 seconds for the chart to show
+        });
+    });
+
     </script>
 </body>
 
