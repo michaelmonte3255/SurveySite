@@ -175,21 +175,18 @@
         }
 
         function collectAndShowChart(qKey) {
-            const formData = new FormData(form);
-            const value = formData.get(qKey);
-            if (!value) return;
+            const selected = form.querySelector(`input[name="${qKey}"]:checked`);
+            if (!selected) {
+                alert("Please select an option before continuing.");
+                return false;
+            }
 
-            const counts = {};
-            document.querySelectorAll(`input[name="${qKey}"]`).forEach(input => {
-                counts[input.value] = 0;
-            });
-            if (counts.hasOwnProperty(value)) counts[value]++;
-
+            // Create chart with selected answer only
             const data = {
-                labels: Object.keys(counts),
+                labels: [selected.value],
                 datasets: [{
                     label: qKey,
-                    data: Object.values(counts),
+                    data: [1],
                     backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"]
                 }]
             };
@@ -197,23 +194,36 @@
             if (chartInstance) chartInstance.destroy();
             chartInstance = new Chart(canvas, {
                 type: "pie",
-                data: data
+                data: data,
+                options: {
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    }
+                }
             });
+
             canvas.style.display = "block";
+            return true;
         }
 
         document.querySelectorAll(".next-btn").forEach((btn, index) => {
             btn.addEventListener("click", () => {
                 const qKey = questions[index].key;
-                collectAndShowChart(qKey);
-                currentStep++;
-                setTimeout(() => showStep(currentStep), 2000);
-            });
-        });
+                const isValid = collectAndShowChart(qKey);
+                if (!isValid) return;
 
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            alert("Thank you for submitting the survey!");
+                setTimeout(() => {
+                    currentStep++;
+                    if (currentStep < questions.length) {
+                        showStep(currentStep);
+                    } else {
+                        form.innerHTML = "<h2>Thank you for submitting the survey!</h2>";
+                        canvas.style.display = "none";
+                    }
+                }, 1500);
+            });
         });
 
         showStep(currentStep);
