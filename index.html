@@ -162,7 +162,7 @@
             nextBtn.classList.add("next-btn");
             stepDiv.appendChild(nextBtn);
 
-            form.insertBefore(stepDiv, form.lastElementChild);
+            form.appendChild(stepDiv);
         });
 
         const steps = document.querySelectorAll(".form-step");
