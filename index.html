@@ -2,250 +2,226 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Environmental Survey Form</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            background-color: #05c46b;
-            font-family: Verdana;
-            text-align: center;
-        }
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Environmental Survey Form</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background-color: #05c46b;
+      font-family: Verdana;
+      text-align: center;
+    }
 
-        .form-step {
-            display: none;
-        }
+    .form-step {
+      display: none;
+    }
 
-        .form-step.active {
-            display: block;
-            background-color: #fff;
-            max-width: 500px;
-            margin: 50px auto;
-            padding: 30px 20px;
-            box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.5);
-        }
+    .form-step.active {
+      display: block;
+      background-color: #fff;
+      max-width: 500px;
+      margin: 50px auto;
+      padding: 30px 20px;
+      box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.5);
+    }
 
-        .form-control {
-            text-align: left;
-            margin-bottom: 25px;
-        }
+    .form-control {
+      text-align: left;
+      margin-bottom: 25px;
+    }
 
-        .form-control label {
-            display: block;
-            margin-bottom: 10px;
-        }
+    .form-control label {
+      display: block;
+      margin-bottom: 10px;
+    }
 
-        .form-control input[type="radio"] {
-            display: inline-block;
-            width: auto;
-        }
+    .form-control input[type="radio"] {
+      display: inline-block;
+      width: auto;
+      margin-right: 10px;
+    }
 
-        button {
-            background-color: #05c46b;
-            border: 1px solid #777;
-            border-radius: 2px;
-            font-family: inherit;
-            font-size: 21px;
-            display: block;
-            width: 100%;
-            margin-top: 30px;
-            margin-bottom: 20px;
-        }
-    </style>
+    button {
+      background-color: #05c46b;
+      border: 1px solid #777;
+      border-radius: 2px;
+      font-family: inherit;
+      font-size: 21px;
+      display: block;
+      width: 100%;
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 
 <body>
-    <h1>Environmental Survey Form</h1>
+  <h1>Environmental Survey Form</h1>
 
-    <form id="form">
-        <!-- Steps generated dynamically with JavaScript -->
-    </form>
+  <form id="form"></form>
 
-    <canvas id="resultsChart" width="400" height="400" style="display:none; margin: 0 auto;"></canvas>
+  <canvas id="resultsChart" width="400" height="400" style="display:none; margin: 0 auto;"></canvas>
 
-    <script>
-        const form = document.getElementById("form");
-        const canvas = document.getElementById("resultsChart");
-        let currentStep = 0;
-        let chartInstance = null;
+  <script>
+    const form = document.getElementById("form");
+    const canvas = document.getElementById("resultsChart");
+    let currentStep = 0;
+    let chartInstance = null;
 
-        const questions = [
-            {
-                key: "q1",
-                text: "1. Where did you spend most of your life growing up?",
-                options: ["Rural", "Suburban", "Urban"]
-            },
-            {
-                key: "q2",
-                text: "2. What is your household family income growing up?",
-                options: ["$0-50,000", "$50,000-$100,000", "Over $100,000"]
-            },
-            {
-                key: "q3",
-                text: "3. How often were environmental issues highlighted in your school activities?",
-                options: ["Always", "Rarely", "Never"]
-            },
-            {
-                key: "q4",
-                text: "4. Growing up, how frequently did you try to recycle or reduce waste?",
-                options: ["Often", "Sometimes", "Rarely", "Never"]
-            },
-            {
-                key: "q5",
-                text: "5. How often did your family emphasize environmental concerns while growing up?",
-                options: ["Often", "Sometimes", "Rarely", "Never"]
-            },
-            {
-                key: "q6",
-                text: "6. While growing up, how often did your values/religion/culture influence your environmental perceptions?",
-                options: ["Often", "Sometimes", "Rarely", "Never"]
-            },
-            {
-                key: "q7",
-                text: "7. How often did you engage in outdoor activities as a child?",
-                options: ["Often", "Sometimes", "Rarely", "Never"]
-            },
-            {
-                key: "q8",
-                text: "8. In the last two years, how frequently have you engaged in activities relating to the environment?",
-                options: ["Often", "Sometimes", "Rarely", "Never"]
-            },
-            {
-                key: "q9",
-                text: "9. How frequently do you recycle everyday items?",
-                options: ["Often", "Sometimes", "Rarely", "Never"]
-            },
-            {
-                key: "q10",
-                text: "10. How frequently do you engage in listening to environmental concerns?",
-                options: ["Often", "Sometimes", "Rarely", "Never"]
-            },
-            {
-                key: "q11",
-                text: "11. How concerned are you about environmental issues today?",
-                options: ["Very Concerned", "Moderately Concerned", "A Little Concerned", "Not Concerned"]
+    const questions = [
+      {
+        key: "q1",
+        text: "1. Where did you spend most of your life growing up?",
+        options: ["Rural", "Suburban", "Urban"]
+      },
+      {
+        key: "q2",
+        text: "2. What is your household family income growing up?",
+        options: ["$0-50,000", "$50,000-$100,000", "Over $100,000"]
+      },
+      {
+        key: "q3",
+        text: "3. How often were environmental issues highlighted in your school activities?",
+        options: ["Always", "Rarely", "Never"]
+      },
+      {
+        key: "q4",
+        text: "4. Growing up, how frequently did you try to recycle or reduce waste?",
+        options: ["Often", "Sometimes", "Rarely", "Never"]
+      },
+      {
+        key: "q5",
+        text: "5. How often did your family emphasize environmental concerns while growing up?",
+        options: ["Often", "Sometimes", "Rarely", "Never"]
+      },
+      {
+        key: "q6",
+        text: "6. While growing up, how often did your values/religion/culture influence your environmental perceptions?",
+        options: ["Often", "Sometimes", "Rarely", "Never"]
+      },
+      {
+        key: "q7",
+        text: "7. How often did you engage in outdoor activities as a child?",
+        options: ["Often", "Sometimes", "Rarely", "Never"]
+      },
+      {
+        key: "q8",
+        text: "8. In the last two years, how frequently have you engaged in activities relating to the environment?",
+        options: ["Often", "Sometimes", "Rarely", "Never"]
+      },
+      {
+        key: "q9",
+        text: "9. How frequently do you recycle everyday items?",
+        options: ["Often", "Sometimes", "Rarely", "Never"]
+      },
+      {
+        key: "q10",
+        text: "10. How frequently do you engage in listening to environmental concerns?",
+        options: ["Often", "Sometimes", "Rarely", "Never"]
+      },
+      {
+        key: "q11",
+        text: "11. How concerned are you about environmental issues today?",
+        options: ["Very Concerned", "Moderately Concerned", "A Little Concerned", "Not Concerned"]
+      }
+    ];
+
+    function showStep(index) {
+      const steps = document.querySelectorAll(".form-step");
+      steps.forEach((step, i) => {
+        step.classList.toggle("active", i === index);
+      });
+      canvas.style.display = "none";
+    }
+
+    function collectAndShowChart(qKey) {
+      const selected = form.querySelector(`input[name="${qKey}"]:checked`);
+      if (!selected) {
+        alert("Please select an option before continuing.");
+        return false;
+      }
+
+      const data = {
+        labels: [selected.value],
+        datasets: [{
+          label: qKey,
+          data: [1],
+          backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"]
+        }]
+      };
+
+      if (chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(canvas, {
+        type: "pie",
+        data: data,
+        options: {
+          plugins: {
+            legend: {
+              display: true
             }
-        ];
+          }
+        }
+      });
 
-        // Dynamically build form steps
-        questions.forEach((q, index) => {
-            const stepDiv = document.createElement("div");
-            stepDiv.classList.add("form-step");
-            if (index === 0) stepDiv.classList.add("active");
-            stepDiv.setAttribute("data-step", index + 1);
+      canvas.style.display = "block";
+      return true;
+    }
 
-            const control = document.createElement("div");
-            control.classList.add("form-control");
+    // Build steps and attach listeners
+    questions.forEach((q, index) => {
+      const stepDiv = document.createElement("div");
+      stepDiv.classList.add("form-step");
+      if (index === 0) stepDiv.classList.add("active");
 
-            const label = document.createElement("label");
-            label.textContent = q.text;
-            control.appendChild(label);
+      const control = document.createElement("div");
+      control.classList.add("form-control");
 
-            q.options.forEach(opt => {
-                const optionLabel = document.createElement("label");
-                const radio = document.createElement("input");
-                radio.type = "radio";
-                radio.name = q.key;
-                radio.value = opt;
-                optionLabel.appendChild(radio);
-                optionLabel.append(" " + opt);
-                control.appendChild(optionLabel);
-            });
+      const label = document.createElement("label");
+      label.textContent = q.text;
+      control.appendChild(label);
 
-            stepDiv.appendChild(control);
+      q.options.forEach(opt => {
+        const optionLabel = document.createElement("label");
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = q.key;
+        radio.value = opt;
+        optionLabel.appendChild(radio);
+        optionLabel.append(" " + opt);
+        control.appendChild(optionLabel);
+      });
 
-            const nextBtn = document.createElement("button");
-            nextBtn.type = "button";
-            nextBtn.textContent = index === questions.length - 1 ? "Finish" : "Next";
-            nextBtn.classList.add("next-btn");
-            stepDiv.appendChild(nextBtn);
+      stepDiv.appendChild(control);
 
-            form.insertBefore(stepDiv, form.lastElementChild);
-        });
+      const nextBtn = document.createElement("button");
+      nextBtn.type = "button";
+      nextBtn.textContent = index === questions.length - 1 ? "Finish" : "Next";
+      nextBtn.classList.add("next-btn");
 
-        const steps = document.querySelectorAll(".form-step");
+      // Add click listener for this button
+      nextBtn.addEventListener("click", () => {
+        const isValid = collectAndShowChart(q.key);
+        if (!isValid) return;
 
-        function showStep(index) {
-            steps.forEach((step, i) => {
-                step.classList.toggle("active", i === index);
-            });
+        setTimeout(() => {
+          currentStep++;
+          if (currentStep < questions.length) {
+            showStep(currentStep);
+          } else {
+            form.innerHTML = "<h2>Thank you for submitting the survey!</h2>";
             canvas.style.display = "none";
-        }
+          }
+        }, 1500);
+      });
 
-        function collectAndShowChart(qKey) {
-            const formData = new FormData(form);
-            const value = formData.get(qKey);
-            if (!value) return;
-
-            const counts = {};
-            document.querySelectorAll(input[name="${qKey}"]).forEach(input => {
-                counts[input.value] = 0;
-            });
-            if (counts.hasOwnProperty(value)) counts[value]++;
-
-            const data = {
-                labels: Object.keys(counts),
-                datasets: [{
-                    label: qKey,
-                    data: Object.values(counts),
-                    backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"]
-                }]
-            };
-
-            if (chartInstance) chartInstance.destroy();
-            chartInstance = new Chart(canvas, {
-                type: "pie",
-                data: data
-            });
-            canvas.style.display = "block";
-        }
-
-        document.querySelectorAll(".next-btn").forEach((btn, index) => {
-            btn.addEventListener("click", () => {
-            const qKey = questions[index].key;
-
-            const selected = form.querySelector(`input[name="${qKey}"]:checked`);
-            if (!selected) {
-                alert("Please select an option before continuing.");
-                return;
-            }
-
-        // Chart: Only for visual feedback of selected answer
-            const data = {
-                labels: [selected.value],
-                datasets: [{
-                    label: qKey,
-                    data: [1],
-                    backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"]
-                }]
-            };
-
-            if (chartInstance) chartInstance.destroy();
-            chartInstance = new Chart(canvas, {
-                type: "pie",
-                data: data,
-                options: {
-                    plugins: {
-                        legend: {
-                            display: true
-                        }
-                    }
-                }
-            });
-
-            canvas.style.display = "block";
-
-        // Delay step transition to show chart
-            setTimeout(() => {
-                currentStep++;
-                showStep(currentStep);
-            }, 1500); // 1.5 seconds for the chart to show
-        });
+      stepDiv.appendChild(nextBtn);
+      form.appendChild(stepDiv);
     });
 
-    </script>
+    showStep(currentStep);
+  </script>
 </body>
 
-</html
+</html>
