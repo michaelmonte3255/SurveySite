@@ -128,100 +128,150 @@
       }
     ];
 
+    const responses = {}; 
+
     function showStep(index) {
-      const steps = document.querySelectorAll(".form-step");
-      steps.forEach((step, i) => {
-        step.classList.toggle("active", i === index);
-      });
-      canvas.style.display = "none";
+        const steps = document.querySelectorAll(".form-step");
+        steps.forEach((step, i) => {
+            step.classList.toggle("active", i === index);
+        });
+        canvas.style.display = "none";
     }
 
     function collectAndShowChart(qKey) {
-      const selected = form.querySelector(`input[name="${qKey}"]:checked`);
-      if (!selected) {
-        alert("Please select an option before continuing.");
-        return false;
-      }
-
-      const data = {
-        labels: [selected.value],
-        datasets: [{
-          label: qKey,
-          data: [1],
-          backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"]
-        }]
-      };
-
-      if (chartInstance) chartInstance.destroy();
-      chartInstance = new Chart(canvas, {
-        type: "pie",
-        data: data,
-        options: {
-          plugins: {
-            legend: {
-              display: true
-            }
-          }
+        const selected = form.querySelector(`input[name="${qKey}"]:checked`);
+        if (!selected) {
+            alert("Please select an option before continuing.");
+            return false;
         }
-      });
 
-      canvas.style.display = "block";
-      return true;
+        // Store the selected answer
+        responses[qKey] = selected.value;
+
+        const data = {
+            labels: [selected.value],
+            datasets: [{
+                label: qKey,
+                data: [1],
+                backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"]
+            }]
+        };
+
+        if (chartInstance) chartInstance.destroy();
+        chartInstance = new Chart(canvas, {
+            type: "pie",
+            data: data,
+            options: {
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                }
+            }
+        });
+
+        canvas.style.display = "block";
+        return true;
     }
 
-    // Build steps and attach listeners
+    function showFinalChart() {
+        const labels = questions.map(q => q.text);
+        const data = questions.map(q => {
+            const val = responses[q.key];
+            return q.options.indexOf(val) + 1; // Use position as numeric value
+        });
+
+        if (chartInstance) chartInstance.destroy();
+        chartInstance = new Chart(canvas, {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Your Responses (as numeric ranks)",
+                    data: data,
+                    backgroundColor: "#36A2EB"
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            precision: 0
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const index = context.dataIndex;
+                                const q = questions[index];
+                                return ` ${responses[q.key]}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        canvas.style.display = "block";
+    }
+
+    // Build steps
     questions.forEach((q, index) => {
-      const stepDiv = document.createElement("div");
-      stepDiv.classList.add("form-step");
-      if (index === 0) stepDiv.classList.add("active");
+        const stepDiv = document.createElement("div");
+        stepDiv.classList.add("form-step");
+        if (index === 0) stepDiv.classList.add("active");
 
-      const control = document.createElement("div");
-      control.classList.add("form-control");
+        const control = document.createElement("div");
+        control.classList.add("form-control");
 
-      const label = document.createElement("label");
-      label.textContent = q.text;
-      control.appendChild(label);
+        const label = document.createElement("label");
+        label.textContent = q.text;
+        control.appendChild(label);
 
-      q.options.forEach(opt => {
-        const optionLabel = document.createElement("label");
-        const radio = document.createElement("input");
-        radio.type = "radio";
-        radio.name = q.key;
-        radio.value = opt;
-        optionLabel.appendChild(radio);
-        optionLabel.append(" " + opt);
-        control.appendChild(optionLabel);
-      });
+        q.options.forEach(opt => {
+            const optionLabel = document.createElement("label");
+            const radio = document.createElement("input");
+            radio.type = "radio";
+            radio.name = q.key;
+            radio.value = opt;
+            optionLabel.appendChild(radio);
+            optionLabel.append(" " + opt);
+            control.appendChild(optionLabel);
+        });
 
-      stepDiv.appendChild(control);
+        stepDiv.appendChild(control);
 
-      const nextBtn = document.createElement("button");
-      nextBtn.type = "button";
-      nextBtn.textContent = index === questions.length - 1 ? "Finish" : "Next";
-      nextBtn.classList.add("next-btn");
+        const nextBtn = document.createElement("button");
+        nextBtn.type = "button";
+        nextBtn.textContent = index === questions.length - 1 ? "Finish" : "Next";
+        nextBtn.classList.add("next-btn");
 
-      // Add click listener for this button
-      nextBtn.addEventListener("click", () => {
-        const isValid = collectAndShowChart(q.key);
-        if (!isValid) return;
+        nextBtn.addEventListener("click", () => {
+            const isValid = collectAndShowChart(q.key);
+            if (!isValid) return;
 
-        setTimeout(() => {
-          currentStep++;
-          if (currentStep < questions.length) {
-            showStep(currentStep);
-          } else {
-            form.innerHTML = "<h2>Thank you for submitting the survey!</h2>";
-            canvas.style.display = "none";
-          }
-        }, 1500);
-      });
+            setTimeout(() => {
+                currentStep++;
+                if (currentStep < questions.length) {
+                    showStep(currentStep);
+                } else {
+                    form.innerHTML = "<h2>Thanks for completing the survey!</h2>";
+                    showFinalChart(); // 🎯 Show summary chart
+                }
+            }, 1500);
+        });
 
-      stepDiv.appendChild(nextBtn);
-      form.appendChild(stepDiv);
+        stepDiv.appendChild(nextBtn);
+        form.appendChild(stepDiv);
     });
 
     showStep(currentStep);
-  </script>
-</body>
-
-</html>
+</script>
