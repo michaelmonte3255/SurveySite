@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="="en">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Environmental Survey Form</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -13,11 +11,9 @@
       font-family: Verdana;
       text-align: center;
     }
-
     .form-step {
       display: none;
     }
-
     .form-step.active {
       display: block;
       background-color: #fff;
@@ -26,23 +22,19 @@
       padding: 30px 20px;
       box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.5);
     }
-
     .form-control {
       text-align: left;
       margin-bottom: 25px;
     }
-
     .form-control label {
       display: block;
       margin-bottom: 10px;
     }
-
     .form-control input[type="radio"] {
       display: inline-block;
       width: auto;
       margin-right: 10px;
     }
-
     button {
       background-color: #05c46b;
       border: 1px solid #777;
@@ -56,12 +48,15 @@
     }
   </style>
 </head>
-
 <body>
   <h1>Environmental Survey Form</h1>
 
   <form id="form"></form>
 
+  <!-- Reset Button -->
+  <button id="resetBtn" style="margin: 20px auto; display: block;">Reset All Survey Data</button>
+
+  <!-- Chart Container -->
   <canvas id="resultsChart" width="400" height="400" style="display:none; margin: 0 auto;"></canvas>
 
   <script>
@@ -71,207 +66,190 @@
     let chartInstance = null;
 
     const questions = [
-      {
-        key: "q1",
-        text: "1. Where did you spend most of your life growing up?",
-        options: ["Rural", "Suburban", "Urban"]
-      },
-      {
-        key: "q2",
-        text: "2. What is your household family income growing up?",
-        options: ["$0-50,000", "$50,000-$100,000", "Over $100,000"]
-      },
-      {
-        key: "q3",
-        text: "3. How often were environmental issues highlighted in your school activities?",
-        options: ["Always", "Rarely", "Never"]
-      },
-      {
-        key: "q4",
-        text: "4. Growing up, how frequently did you try to recycle or reduce waste?",
-        options: ["Often", "Sometimes", "Rarely", "Never"]
-      },
-      {
-        key: "q5",
-        text: "5. How often did your family emphasize environmental concerns while growing up?",
-        options: ["Often", "Sometimes", "Rarely", "Never"]
-      },
-      {
-        key: "q6",
-        text: "6. While growing up, how often did your values/religion/culture influence your environmental perceptions?",
-        options: ["Often", "Sometimes", "Rarely", "Never"]
-      },
-      {
-        key: "q7",
-        text: "7. How often did you engage in outdoor activities as a child?",
-        options: ["Often", "Sometimes", "Rarely", "Never"]
-      },
-      {
-        key: "q8",
-        text: "8. In the last two years, how frequently have you engaged in activities relating to the environment?",
-        options: ["Often", "Sometimes", "Rarely", "Never"]
-      },
-      {
-        key: "q9",
-        text: "9. How frequently do you recycle everyday items?",
-        options: ["Often", "Sometimes", "Rarely", "Never"]
-      },
-      {
-        key: "q10",
-        text: "10. How frequently do you engage in listening to environmental concerns?",
-        options: ["Often", "Sometimes", "Rarely", "Never"]
-      },
-      {
-        key: "q11",
-        text: "11. How concerned are you about environmental issues today?",
-        options: ["Very Concerned", "Moderately Concerned", "A Little Concerned", "Not Concerned"]
-      }
+      { key: "q1", text: "1. Where did you spend most of your life growing up?", options: ["Rural", "Suburban", "Urban"] },
+      { key: "q2", text: "2. What is your household family income growing up?", options: ["$0-50,000", "$50,000-$100,000", "Over $100,000"] },
+      { key: "q3", text: "3. How often were environmental issues highlighted in your school activities?", options: ["Always", "Rarely", "Never"] },
+      { key: "q4", text: "4. Growing up, how frequently did you try to recycle or reduce waste?", options: ["Often", "Sometimes", "Rarely", "Never"] },
+      { key: "q5", text: "5. How often did your family emphasize environmental concerns while growing up?", options: ["Often", "Sometimes", "Rarely", "Never"] },
+      { key: "q6", text: "6. While growing up, how often did your values/religion/culture influence your environmental perceptions?", options: ["Often", "Sometimes", "Rarely", "Never"] },
+      { key: "q7", text: "7. How often did you engage in outdoor activities as a child?", options: ["Often", "Sometimes", "Rarely", "Never"] },
+      { key: "q8", text: "8. In the last two years, how frequently have you engaged in activities relating to the environment?", options: ["Often", "Sometimes", "Rarely", "Never"] },
+      { key: "q9", text: "9. How frequently do you recycle everyday items?", options: ["Often", "Sometimes", "Rarely", "Never"] },
+      { key: "q10", text: "10. How frequently do you engage in listening to environmental concerns?", options: ["Often", "Sometimes", "Rarely", "Never"] },
+      { key: "q11", text: "11. How concerned are you about environmental issues today?", options: ["Very Concerned", "Moderately Concerned", "A Little Concerned", "Not Concerned"] }
     ];
 
-    const responses = {}; 
+    const responses = {};
 
     function showStep(index) {
-        const steps = document.querySelectorAll(".form-step");
-        steps.forEach((step, i) => {
-            step.classList.toggle("active", i === index);
-        });
-        canvas.style.display = "none";
+      const steps = document.querySelectorAll(".form-step");
+      steps.forEach((step, i) => {
+        step.classList.toggle("active", i === index);
+      });
+      canvas.style.display = "none";
     }
 
-    function collectAndShowChart(qKey) {
-        const selected = form.querySelector(`input[name="${qKey}"]:checked`);
-        if (!selected) {
-            alert("Please select an option before continuing.");
-            return false;
-        }
+    function saveToLocalStorage() {
+      let data = JSON.parse(localStorage.getItem("surveyResults")) || [];
+      data.push(responses);
+      localStorage.setItem("surveyResults", JSON.stringify(data));
+    }
 
-        // Store the selected answer
-        responses[qKey] = selected.value;
+    function showAllResults() {
+      const allResponses = JSON.parse(localStorage.getItem("surveyResults")) || [];
+      const summaryDiv = document.createElement("div");
 
-        const data = {
-            labels: [selected.value],
+      questions.forEach((q, index) => {
+        const counts = {};
+        q.options.forEach(opt => counts[opt] = 0);
+
+        allResponses.forEach(userResp => {
+          const answer = userResp[q.key];
+          if (counts[answer] !== undefined) counts[answer]++;
+        });
+
+        const pieCanvas = document.createElement("canvas");
+        pieCanvas.width = 400;
+        pieCanvas.height = 400;
+        summaryDiv.appendChild(document.createElement("hr"));
+
+        const title = document.createElement("h3");
+        title.innerText = q.text;
+        summaryDiv.appendChild(title);
+        summaryDiv.appendChild(pieCanvas);
+
+        new Chart(pieCanvas, {
+          type: "pie",
+          data: {
+            labels: Object.keys(counts),
             datasets: [{
-                label: qKey,
-                data: [1],
-                backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"]
+              data: Object.values(counts),
+              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"]
             }]
-        };
+          }
+        });
+      });
 
-        if (chartInstance) chartInstance.destroy();
-        chartInstance = new Chart(canvas, {
-            type: "pie",
+      const barCanvas = document.createElement("canvas");
+      barCanvas.width = 600;
+      barCanvas.height = 400;
+
+      const labels = questions.map(q => q.text);
+      const data = questions.map(q => {
+        const val = responses[q.key];
+        return q.options.indexOf(val) + 1;
+      });
+
+      summaryDiv.appendChild(document.createElement("hr"));
+      const barTitle = document.createElement("h3");
+      barTitle.innerText = "Your Answer Summary (Bar Chart)";
+      summaryDiv.appendChild(barTitle);
+      summaryDiv.appendChild(barCanvas);
+
+      new Chart(barCanvas, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Your Responses (Ranked Position)",
             data: data,
-            options: {
-                plugins: {
-                    legend: {
-                        display: true
-                    }
-                }
+            backgroundColor: "#36A2EB"
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
             }
-        });
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  const q = questions[context.dataIndex];
+                  return ` ${responses[q.key]}`;
+                }
+              }
+            }
+          }
+        }
+      });
 
-        canvas.style.display = "block";
-        return true;
+      form.appendChild(summaryDiv);
     }
 
-    function showFinalChart() {
-        const labels = questions.map(q => q.text);
-        const data = questions.map(q => {
-            const val = responses[q.key];
-            return q.options.indexOf(val) + 1; // Use position as numeric value
-        });
-
-        if (chartInstance) chartInstance.destroy();
-        chartInstance = new Chart(canvas, {
-            type: "bar",
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: "Your Responses (as numeric ranks)",
-                    data: data,
-                    backgroundColor: "#36A2EB"
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1,
-                            precision: 0
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                const index = context.dataIndex;
-                                const q = questions[index];
-                                return ` ${responses[q.key]}`;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        canvas.style.display = "block";
+    function validateAndStoreAnswer(qKey) {
+      const selected = form.querySelector(`input[name="${qKey}"]:checked`);
+      if (!selected) {
+        alert("Please select an option before continuing.");
+        return false;
+      }
+      responses[qKey] = selected.value;
+      return true;
     }
 
-    // Build steps
     questions.forEach((q, index) => {
-        const stepDiv = document.createElement("div");
-        stepDiv.classList.add("form-step");
-        if (index === 0) stepDiv.classList.add("active");
+      const stepDiv = document.createElement("div");
+      stepDiv.classList.add("form-step");
+      if (index === 0) stepDiv.classList.add("active");
 
-        const control = document.createElement("div");
-        control.classList.add("form-control");
+      const control = document.createElement("div");
+      control.classList.add("form-control");
 
-        const label = document.createElement("label");
-        label.textContent = q.text;
-        control.appendChild(label);
+      const label = document.createElement("label");
+      label.textContent = q.text;
+      control.appendChild(label);
 
-        q.options.forEach(opt => {
-            const optionLabel = document.createElement("label");
-            const radio = document.createElement("input");
-            radio.type = "radio";
-            radio.name = q.key;
-            radio.value = opt;
-            optionLabel.appendChild(radio);
-            optionLabel.append(" " + opt);
-            control.appendChild(optionLabel);
-        });
+      q.options.forEach(opt => {
+        const optionLabel = document.createElement("label");
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = q.key;
+        radio.value = opt;
+        optionLabel.appendChild(radio);
+        optionLabel.append(" " + opt);
+        control.appendChild(optionLabel);
+      });
 
-        stepDiv.appendChild(control);
+      stepDiv.appendChild(control);
 
-        const nextBtn = document.createElement("button");
-        nextBtn.type = "button";
-        nextBtn.textContent = index === questions.length - 1 ? "Finish" : "Next";
-        nextBtn.classList.add("next-btn");
+      const nextBtn = document.createElement("button");
+      nextBtn.type = "button";
+      nextBtn.textContent = index === questions.length - 1 ? "Finish" : "Next";
+      nextBtn.classList.add("next-btn");
 
-        nextBtn.addEventListener("click", () => {
-            const isValid = collectAndShowChart(q.key);
-            if (!isValid) return;
+      nextBtn.addEventListener("click", () => {
+        const isValid = validateAndStoreAnswer(q.key);
+        if (!isValid) return;
 
-            setTimeout(() => {
-                currentStep++;
-                if (currentStep < questions.length) {
-                    showStep(currentStep);
-                } else {
-                    form.innerHTML = "<h2>Thanks for completing the survey!</h2>";
-                    showFinalChart(); // 🎯 Show summary chart
-                }
-            }, 1500);
-        });
+        setTimeout(() => {
+          currentStep++;
+          if (currentStep < questions.length) {
+            showStep(currentStep);
+          } else {
+            form.innerHTML = "<h2>Thank you for completing the survey!</h2>";
+            saveToLocalStorage();
+            showAllResults();
+          }
+        }, 300);
+      });
 
-        stepDiv.appendChild(nextBtn);
-        form.appendChild(stepDiv);
+      stepDiv.appendChild(nextBtn);
+      form.appendChild(stepDiv);
     });
 
     showStep(currentStep);
-</script>
+
+    // RESET button logic
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if (confirm("Are you sure you want to delete all survey data?")) {
+        localStorage.removeItem("surveyResults");
+        location.reload();
+      }
+    });
+  </script>
+</body>
+</html>
