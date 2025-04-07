@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="="en">
+<html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Environmental Survey Form</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js"></script>
   <style>
     body {
       background-color: #05c46b;
@@ -48,6 +51,7 @@
     }
   </style>
 </head>
+
 <body>
   <h1>Environmental Survey Form</h1>
 
@@ -60,6 +64,19 @@
   <canvas id="resultsChart" width="400" height="400" style="display:none; margin: 0 auto;"></canvas>
 
   <script>
+    // Firebase Config & Init
+    const firebaseConfig = {
+      apiKey: "AIzaSyB3LGXpqkKBctF67b-I6SznLwHL-VBoTBs",
+      authDomain: "environmental-survey-92c2e.firebaseapp.com",
+      projectId: "environmental-survey-92c2e",
+      storageBucket: "environmental-survey-92c2e.appspot.com",
+      messagingSenderId: "104623922546",
+      appId: "1:104623922546:web:4ca46c9599b4b66753e28f",
+      measurementId: "G-683FNTR2QB"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     const form = document.getElementById("form");
     const canvas = document.getElementById("resultsChart");
     let currentStep = 0;
@@ -89,17 +106,21 @@
       canvas.style.display = "none";
     }
 
-    function saveToLocalStorage() {
-      let data = JSON.parse(localStorage.getItem("surveyResults")) || [];
-      data.push(responses);
-      localStorage.setItem("surveyResults", JSON.stringify(data));
+    async function saveToFirebase(responses) {
+      try {
+        await db.collection("surveyResponses").add(responses);
+        console.log("Survey submitted!");
+      } catch (err) {
+        console.error("Error saving to Firebase:", err);
+      }
     }
 
-    function showAllResults() {
-      const allResponses = JSON.parse(localStorage.getItem("surveyResults")) || [];
+    async function showAllResults() {
+      const snapshot = await db.collection("surveyResponses").get();
+      const allResponses = snapshot.docs.map(doc => doc.data());
       const summaryDiv = document.createElement("div");
 
-      questions.forEach((q, index) => {
+      questions.forEach((q) => {
         const counts = {};
         q.options.forEach(opt => counts[opt] = 0);
 
@@ -128,54 +149,6 @@
             }]
           }
         });
-      });
-
-      const barCanvas = document.createElement("canvas");
-      barCanvas.width = 600;
-      barCanvas.height = 400;
-
-      const labels = questions.map(q => q.text);
-      const data = questions.map(q => {
-        const val = responses[q.key];
-        return q.options.indexOf(val) + 1;
-      });
-
-      summaryDiv.appendChild(document.createElement("hr"));
-      const barTitle = document.createElement("h3");
-      barTitle.innerText = "Your Answer Summary (Bar Chart)";
-      summaryDiv.appendChild(barTitle);
-      summaryDiv.appendChild(barCanvas);
-
-      new Chart(barCanvas, {
-        type: "bar",
-        data: {
-          labels: labels,
-          datasets: [{
-            label: "Your Responses (Ranked Position)",
-            data: data,
-            backgroundColor: "#36A2EB"
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                stepSize: 1
-              }
-            }
-          },
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: function (context) {
-                  const q = questions[context.dataIndex];
-                  return ` ${responses[q.key]}`;
-                }
-              }
-            }
-          }
-        }
       });
 
       form.appendChild(summaryDiv);
@@ -221,18 +194,18 @@
       nextBtn.textContent = index === questions.length - 1 ? "Finish" : "Next";
       nextBtn.classList.add("next-btn");
 
-      nextBtn.addEventListener("click", () => {
+      nextBtn.addEventListener("click", async () => {
         const isValid = validateAndStoreAnswer(q.key);
         if (!isValid) return;
 
-        setTimeout(() => {
+        setTimeout(async () => {
           currentStep++;
           if (currentStep < questions.length) {
             showStep(currentStep);
           } else {
             form.innerHTML = "<h2>Thank you for completing the survey!</h2>";
-            saveToLocalStorage();
-            showAllResults();
+            await saveToFirebase(responses);
+            await showAllResults();
           }
         }, 300);
       });
@@ -246,7 +219,6 @@
     // RESET button logic
     document.getElementById("resetBtn").addEventListener("click", () => {
       if (confirm("Are you sure you want to delete all survey data?")) {
-        localStorage.removeItem("surveyResults");
         location.reload();
       }
     });
