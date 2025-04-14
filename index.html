@@ -177,15 +177,20 @@
       control.appendChild(label);
 
       q.options.forEach(opt => {
-        const optionLabel = document.createElement("label");
-        const radio = document.createElement("input");
-        radio.type = "radio";
-        radio.name = q.key;
-        radio.value = opt;
-        optionLabel.appendChild(radio);
-        optionLabel.append(" " + opt);
-        control.appendChild(optionLabel);
-      });
+      const wrapper = document.createElement("div");
+      wrapper.style.marginBottom = "8px";
+
+      const radio = document.createElement("input");
+      radio.type = "radio";
+      radio.name = q.key;
+      radio.value = opt;
+
+      const labelText = document.createTextNode(" " + opt);
+
+      wrapper.appendChild(radio);
+      wrapper.appendChild(labelText);
+      control.appendChild(wrapper);
+    });
 
       stepDiv.appendChild(control);
 
