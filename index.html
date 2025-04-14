@@ -164,7 +164,7 @@
       form.appendChild(summaryDiv);
     }
 
-    function validateAndStoreAnswer(qKey) {
+    function validateAndStoreAnswer(qKey, index) {
       const selected = form.querySelector(`input[name="${qKey}"]:checked`);
       if (!selected) {
         alert("Please select an option before continuing.");
@@ -230,7 +230,7 @@
       nextBtn.classList.add("next-btn");
 
       nextBtn.addEventListener("click", async () => {
-        const isValid = validateAndStoreAnswer(q.key);
+        const isValid = validateAndStoreAnswer(q.key, index);
         if (!isValid) return;
 
         setTimeout(async () => {
