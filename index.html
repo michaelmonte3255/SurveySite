@@ -101,7 +101,7 @@
     "Over $100,000": 10, "$50,000–$100,000": 5, "$0–50,000": 0,
     "Frequently": 10, "Sometimes": 5, "Rarely": 0,
     "Very Concerned": 10, "Moderately Concerned": 7, "A Little Concerned": 3, "Not Concerned": 0
-  };
+    };
 
     const responses = {};
     let pastScore = 0;
@@ -190,7 +190,7 @@
       <p><strong>Total Score:</strong> ${total} / 120</p>
     ';
     container.appendChild(summary);
-  }
+    }
 
     questions.forEach((q, index) => {
       const stepDiv = document.createElement("div");
@@ -205,21 +205,21 @@
       control.appendChild(label);
 
       q.options.forEach(opt => {
-      const wrapper = document.createElement("div");
-      wrapper.style.marginBottom = "8px";
+        const wrapper = document.createElement("div");
+        wrapper.style.marginBottom = "8px";
 
-      const radio = document.createElement("input");
-      radio.type = "radio";
-      radio.name = q.key;
-      radio.value = opt;
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = q.key;
+        radio.value = opt;
 
-      const label = document.createElement("label");
-      label.appendChild(radio);
-      label.append(" " + opt);
+        const label = document.createElement("label");
+        label.appendChild(radio);
+        label.append(" " + opt);
 
-      wrapper.appendChild(label);
-      control.appendChild(wrapper);
-    });
+        wrapper.appendChild(label);
+        control.appendChild(wrapper);
+      });
 
 
       stepDiv.appendChild(control);
