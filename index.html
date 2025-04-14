@@ -185,12 +185,14 @@
       radio.name = q.key;
       radio.value = opt;
 
-      const labelText = document.createTextNode(" " + opt);
+      const label = document.createElement("label");
+      label.appendChild(radio);
+      label.append(" " + opt);
 
-      wrapper.appendChild(radio);
-      wrapper.appendChild(labelText);
+      wrapper.appendChild(label);
       control.appendChild(wrapper);
     });
+
 
       stepDiv.appendChild(control);
 
