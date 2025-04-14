@@ -96,7 +96,16 @@
       { key: "q12", text: "12. How concerned are you about environmental issues today?", options: ["Very Concerned", "Moderately Concerned", "A Little Concerned", "Not Concerned"] }
     ];
 
+    const scoring = {
+    "Urban": 10, "Suburban": 5, "Rural": 0,
+    "Over $100,000": 10, "$50,000–$100,000": 5, "$0–50,000": 0,
+    "Frequently": 10, "Sometimes": 5, "Rarely": 0,
+    "Very Concerned": 10, "Moderately Concerned": 7, "A Little Concerned": 3, "Not Concerned": 0
+  };
+
     const responses = {};
+    let pastScore = 0;
+    let presentScore = 0;
 
     function showStep(index) {
       const steps = document.querySelectorAll(".form-step");
@@ -151,6 +160,7 @@
         });
       });
 
+      displayScoreSummary(summaryDiv);
       form.appendChild(summaryDiv);
     }
 
@@ -161,8 +171,26 @@
         return false;
       }
       responses[qKey] = selected.value;
+      const value = scoring[selected.value] || 0;
+      if (index < 6) {
+        pastScore += value;
+      } else {
+        presentScore += value;
+      }
       return true;
     }
+    function displayScoreSummary(container) {
+    const total = pastScore + presentScore;
+    const summary = document.createElement("div");
+    summary.style.marginTop = "30px";
+    summary.innerHTML = '
+      <h3>Score Summary</h3>
+      <p><strong>Past Score (Q1–Q6):</strong> ${pastScore} / 60</p>
+      <p><strong>Present Score (Q7–Q12):</strong> ${presentScore} / 60</p>
+      <p><strong>Total Score:</strong> ${total} / 120</p>
+    ';
+    container.appendChild(summary);
+  }
 
     questions.forEach((q, index) => {
       const stepDiv = document.createElement("div");
