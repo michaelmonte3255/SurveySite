@@ -116,13 +116,20 @@
     }
 
     async function saveToFirebase(responses) {
-      try {
-        await db.collection("surveyResponses").add(responses);
-        console.log("Survey submitted!");
-      } catch (err) {
-        console.error("Error saving to Firebase:", err);
-      }
+    try {
+      const totalScore = pastScore + presentScore;
+      await db.collection("surveyResponses").add({
+        ...responses,
+        pastScore,
+        presentScore,
+        totalScore,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      console.log("Survey submitted with scores!");
+    } catch (err) {
+      console.error("Error saving to Firebase:", err);
     }
+  }
 
     async function showAllResults() {
       const snapshot = await db.collection("surveyResponses").get();
