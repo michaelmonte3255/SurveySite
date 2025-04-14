@@ -183,12 +183,12 @@
     const total = pastScore + presentScore;
     const summary = document.createElement("div");
     summary.style.marginTop = "30px";
-    summary.innerHTML = '
+    summary.innerHTML = `
       <h3>Score Summary</h3>
       <p><strong>Past Score (Q1–Q6):</strong> ${pastScore} / 60</p>
       <p><strong>Present Score (Q7–Q12):</strong> ${presentScore} / 60</p>
       <p><strong>Total Score:</strong> ${total} / 120</p>
-    ';
+    `;
     container.appendChild(summary);
     }
 
