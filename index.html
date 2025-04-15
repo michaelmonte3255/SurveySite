@@ -52,8 +52,8 @@
       margin-bottom: 20px;
     }
     canvas {
-    max-width: 800px;
-    max-height: 800px;
+    max-width: 1400px;
+    max-height: 1400px;
     }
   </style>
 </head>
@@ -157,8 +157,8 @@
         });
 
         const pieCanvas = document.createElement("canvas");
-        pieCanvas.width = 800;
-        pieCanvas.height = 800;
+        pieCanvas.width = 1400;
+        pieCanvas.height = 1400;
         summaryDiv.appendChild(document.createElement("hr"));
 
         const container = document.createElement("div");
@@ -168,8 +168,8 @@
         title.innerText = q.key.toUpperCase(); // Shows Q1, Q2, etc.
         title.style.marginBottom = "4px";
 
-        pieCanvas.style.width = "800px";
-        pieCanvas.style.height = "800px";
+        pieCanvas.style.width = "1400px";
+        pieCanvas.style.height = "1400px";
 
         container.appendChild(title);
         container.appendChild(pieCanvas);
