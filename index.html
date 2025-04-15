@@ -7,7 +7,6 @@
   <title>Environmental Survey Form</title>
   <!-- Firebase SDKs -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
   <style>
@@ -56,14 +55,10 @@
 
 <body>
   <h1>Environmental Survey Form</h1>
-
   <form id="form"></form>
-
-  <!-- Chart Container -->
-  <canvas id="resultsChart" width="200" height="200" style="display:none; margin: 0 auto;"></canvas>
+  <canvas id="resultsChart" width="400" height="400" style="display:none; margin: 0 auto;"></canvas>
 
   <script>
-    // Firebase Config & Init
     const firebaseConfig = {
       apiKey: "AIzaSyB3LGXpqkKBctF67b-I6SznLwHL-VBoTBs",
       authDomain: "environmental-survey-92c2e.firebaseapp.com",
@@ -97,10 +92,10 @@
     ];
 
     const scoring = {
-    "Urban": 10, "Suburban": 5, "Rural": 0,
-    "Over $100,000": 10, "$50,000–$100,000": 5, "$0–50,000": 0,
-    "Frequently": 10, "Sometimes": 5, "Rarely": 0,
-    "Very Concerned": 10, "Moderately Concerned": 7, "A Little Concerned": 3, "Not Concerned": 0
+      "Urban": 10, "Suburban": 5, "Rural": 0,
+      "Over $100,000": 10, "$50,000–$100,000": 5, "$0–50,000": 0,
+      "Frequently": 10, "Sometimes": 5, "Rarely": 0,
+      "Very Concerned": 10, "Moderately Concerned": 7, "A Little Concerned": 3, "Not Concerned": 0
     };
 
     const responses = {};
@@ -116,22 +111,15 @@
     }
 
     async function saveToFirebase(responses) {
-      try {
-        const totalScore = pastScore + presentScore;
-        const submission = {
-          ...responses,
-          pastScore,
-          presentScore,
-          totalScore,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        };
-        console.log("Submitting to Firebase with scores:", submission);
-        await db.collection("surveyResponses").add(submission);
-      } catch (err) {
-        console.error("Error saving to Firebase:", err);
-      }
+      const totalScore = pastScore + presentScore;
+      await db.collection("surveyResponses").add({
+        ...responses,
+        pastScore,
+        presentScore,
+        totalScore,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
     }
-
 
     async function showAllResults() {
       const snapshot = await db.collection("surveyResponses").get();
@@ -150,8 +138,6 @@
         const pieCanvas = document.createElement("canvas");
         pieCanvas.width = 400;
         pieCanvas.height = 400;
-        summaryDiv.appendChild(document.createElement("hr"));
-
         const title = document.createElement("h3");
         title.innerText = q.text;
         summaryDiv.appendChild(title);
@@ -174,31 +160,29 @@
     }
 
     function validateAndStoreAnswer(qKey, index) {
-      const selected = form.querySelector(input[name="${qKey}"]:checked);
+      const selected = form.querySelector(`input[name="${qKey}"]:checked`);
       if (!selected) {
         alert("Please select an option before continuing.");
         return false;
       }
       responses[qKey] = selected.value;
       const value = scoring[selected.value] || 0;
-      if (index < 6) {
-        pastScore += value;
-      } else {
-        presentScore += value;
-      }
+      if (index < 6) pastScore += value;
+      else presentScore += value;
       return true;
     }
+
     function displayScoreSummary(container) {
-    const total = pastScore + presentScore;
-    const summary = document.createElement("div");
-    summary.style.marginTop = "30px";
-    summary.innerHTML = 
-      <h3>Score Summary</h3>
-      <p><strong>Past Score (Q1–Q6):</strong> ${pastScore} / 60</p>
-      <p><strong>Present Score (Q7–Q12):</strong> ${presentScore} / 60</p>
-      <p><strong>Total Score:</strong> ${total} / 120</p>
-    ;
-    container.appendChild(summary);
+      const total = pastScore + presentScore;
+      const summary = document.createElement("div");
+      summary.style.marginTop = "30px";
+      summary.innerHTML = `
+        <h3>Score Summary</h3>
+        <p><strong>Past Score (Q1–Q6):</strong> ${pastScore} / 60</p>
+        <p><strong>Present Score (Q7–Q12):</strong> ${presentScore} / 60</p>
+        <p><strong>Total Score:</strong> ${total} / 120</p>
+      `;
+      container.appendChild(summary);
     }
 
     questions.forEach((q, index) => {
@@ -216,32 +200,25 @@
       q.options.forEach(opt => {
         const wrapper = document.createElement("div");
         wrapper.style.marginBottom = "8px";
-
         const radio = document.createElement("input");
         radio.type = "radio";
         radio.name = q.key;
         radio.value = opt;
-
-        const label = document.createElement("label");
-        label.appendChild(radio);
-        label.append(" " + opt);
-
-        wrapper.appendChild(label);
+        const optLabel = document.createElement("label");
+        optLabel.appendChild(radio);
+        optLabel.append(" " + opt);
+        wrapper.appendChild(optLabel);
         control.appendChild(wrapper);
       });
-
 
       stepDiv.appendChild(control);
 
       const nextBtn = document.createElement("button");
       nextBtn.type = "button";
       nextBtn.textContent = index === questions.length - 1 ? "Finish" : "Next";
-      nextBtn.classList.add("next-btn");
-
       nextBtn.addEventListener("click", async () => {
         const isValid = validateAndStoreAnswer(q.key, index);
         if (!isValid) return;
-
         setTimeout(async () => {
           currentStep++;
           if (currentStep < questions.length) {
@@ -259,8 +236,6 @@
     });
 
     showStep(currentStep);
-
-
   </script>
 </body>
 </html>
