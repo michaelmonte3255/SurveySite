@@ -161,12 +161,19 @@
         pieCanvas.height = 400;
         summaryDiv.appendChild(document.createElement("hr"));
 
+        const container = document.createElement("div");
+        container.style.textAlign = "center";
+
         const title = document.createElement("h4");
-        title.innerText = q.text.toUpperCase();
-        summaryDiv.appendChild(title);
-        summaryDiv.appendChild(pieCanvas);
-        chartContainer.appendChild(pieCanvas);
-        summaryDiv.appendChild(chartContainer);
+        title.innerText = q.key.toUpperCase(); // Shows Q1, Q2, etc.
+        title.style.marginBottom = "4px";
+
+        pieCanvas.style.width = "150px";
+        pieCanvas.style.height = "150px";
+
+        container.appendChild(title);
+        container.appendChild(pieCanvas);
+        summaryDiv.appendChild(container);
 
         new Chart(pieCanvas, {
           type: "pie",
