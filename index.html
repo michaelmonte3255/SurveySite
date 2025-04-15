@@ -51,6 +51,10 @@
       margin-top: 30px;
       margin-bottom: 20px;
     }
+    canvas {
+    max-width: 150px;
+    max-height: 150px;
+    }
   </style>
 </head>
 
@@ -137,6 +141,11 @@
       const snapshot = await db.collection("surveyResponses").get();
       const allResponses = snapshot.docs.map(doc => doc.data());
       const summaryDiv = document.createElement("div");
+      summaryDiv.style.display = "grid";
+      summaryDiv.style.gridTemplateColumns = "repeat(3, 1fr)";
+      summaryDiv.style.gap = "20px";
+      summaryDiv.style.padding = "20px";
+      summaryDiv.style.justifyItems = "center";
 
       questions.forEach((q) => {
         const counts = {};
@@ -152,13 +161,12 @@
         pieCanvas.height = 400;
         summaryDiv.appendChild(document.createElement("hr"));
 
-        const title = document.createElement("h3");
-        title.innerText = q.text;
+        const title = document.createElement("h4");
+        title.innerText = q.text.toUpperCase();
         summaryDiv.appendChild(title);
-        pieCanvas.style.width = "50px";
-        pieCanvas.style.height = "50px";
-        pieCanvas.style.margin = "0 auto";
         summaryDiv.appendChild(pieCanvas);
+        chartContainer.appendChild(pieCanvas);
+        summaryDiv.appendChild(chartContainer);
 
         new Chart(pieCanvas, {
           type: "pie",
