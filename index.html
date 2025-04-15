@@ -52,8 +52,8 @@
       margin-bottom: 20px;
     }
     canvas {
-    max-width: 1400px;
-    max-height: 1400px;
+    max-width: 300px;
+    max-height: 300px;
     }
   </style>
 </head>
@@ -143,8 +143,8 @@
       const summaryDiv = document.createElement("div");
       summaryDiv.style.display = "grid";
       summaryDiv.style.gridTemplateColumns = "repeat(3, 1fr)";
-      summaryDiv.style.gap = "20px";
-      summaryDiv.style.padding = "20px";
+      summaryDiv.style.gap = "30px";
+      summaryDiv.style.padding = "40px";
       summaryDiv.style.justifyItems = "center";
 
       questions.forEach((q) => {
@@ -157,9 +157,8 @@
         });
 
         const pieCanvas = document.createElement("canvas");
-        pieCanvas.width = 1400;
-        pieCanvas.height = 1400;
-        summaryDiv.appendChild(document.createElement("hr"));
+        pieCanvas.width = 300;
+        pieCanvas.height = 300;
 
         const container = document.createElement("div");
         container.style.textAlign = "center";
@@ -168,8 +167,8 @@
         title.innerText = q.key.toUpperCase(); // Shows Q1, Q2, etc.
         title.style.marginBottom = "4px";
 
-        pieCanvas.style.width = "1400px";
-        pieCanvas.style.height = "1400px";
+        pieCanvas.style.width = "300px";
+        pieCanvas.style.height = "300px";
 
         container.appendChild(title);
         container.appendChild(pieCanvas);
