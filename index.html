@@ -175,8 +175,14 @@
         summaryDiv.appendChild(container);
       });
 
-      displayScoreSummary(form);
-      form.appendChild(summaryDiv);
+      const scoreWrapper = document.createElement("div");
+      scoreWrapper.style.display = "flex";
+      scoreWrapper.style.justifyContent = "center";
+      scoreWrapper.style.marginTop = "40px";
+
+      displayScoreSummary(scoreWrapper);
+      form.appendChild(scoreWrapper); // now the score block is centered
+      form.appendChild(summaryDiv); 
     }
 
     function validateAndStoreAnswer(qKey, index) {
