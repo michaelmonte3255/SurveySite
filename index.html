@@ -124,7 +124,12 @@
     async function showAllResults() {
       const snapshot = await db.collection("surveyResponses").get();
       const allResponses = snapshot.docs.map(doc => doc.data());
+
       const summaryDiv = document.createElement("div");
+      summaryDiv.style.display = "grid";
+      summaryDiv.style.gridTemplateColumns = "repeat(2, 1fr)";
+      summaryDiv.style.gap = "40px";
+      summaryDiv.style.padding = "20px";
 
       questions.forEach((q) => {
         const counts = {};
@@ -135,13 +140,18 @@
           if (counts[answer] !== undefined) counts[answer]++;
         });
 
-        const pieCanvas = document.createElement("canvas");
-        pieCanvas.width = 50;
-        pieCanvas.height = 50;
+        const container = document.createElement("div");
+        container.style.textAlign = "center";
+
         const title = document.createElement("h3");
         title.innerText = q.text;
-        summaryDiv.appendChild(title);
-        summaryDiv.appendChild(pieCanvas);
+        title.style.marginBottom = "12px";
+        container.appendChild(title);
+
+        const pieCanvas = document.createElement("canvas");
+        pieCanvas.width = 400;
+        pieCanvas.height = 400;
+        container.appendChild(pieCanvas);
 
         new Chart(pieCanvas, {
           type: "pie",
@@ -151,8 +161,18 @@
               data: Object.values(counts),
               backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"]
             }]
+          },
+          options: {
+            responsive: false,
+            plugins: {
+              legend: {
+                position: 'bottom'
+              }
+            }
           }
         });
+
+        summaryDiv.appendChild(container);
       });
 
       displayScoreSummary(summaryDiv);
