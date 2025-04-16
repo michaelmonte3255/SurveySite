@@ -196,7 +196,8 @@
       const total = pastScore + presentScore;
       const summary = document.createElement("div");
       summary.style.marginTop = "30px";
-      summary.style.textAlign = "center"; 
+      summary.style.textAlign = "center";
+      summary.style.gridColumn = "1 / -1"; // centers the graph
       summary.innerHTML = `
         <h3>Score Summary</h3>
         <p><strong>Past Score (Q1–Q6):</strong> ${pastScore} / 60</p>
