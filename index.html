@@ -81,19 +81,19 @@
     let chartInstance = null;
 
     // List of questions and answers that are used in the survey
-    const questions = [
-      { key: "q1", text: "1. From the ages of 0 to 18 years, what type of community did you grow up in?", options: ["Urban", "Suburban", "Rural"] },
-      { key: "q2", text: "2. What was your average household family income from the ages of 0 to 18? Give your best guess", options: ["Over $100,000", "$50,000–$100,000", "$0–50,000"] },
-      { key: "q3", text: "3. How often were environmental issues highlighted in your school curriculum?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q4", text: "4. During this time, how frequently did you or your family try to recycle or reduce waste?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q5", text: "5. In your household, how often were environmental concerns emphasized?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q6", text: "6. While growing up, how often did your values/religion/culture influence your environmental perceptions?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q7", text: "7. In the past two years, how frequently have you engaged in activities relating to the environment?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q8", text: "8. How frequently do you currently recycle everyday items?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q9", text: "9. How frequently do you engage or participate in listening to environmental concerns?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q10", text: "10. How often have you donated or volunteered money or time to environmental concerns in the past two years?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q11", text: "11. How often do you consider environmental issues when making decisions on who you vote for?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q12", text: "12. How concerned are you about environmental issues today?", options: ["Very Concerned", "Moderately Concerned", "A Little Concerned", "Not Concerned"] }
+    const questionList = [
+      { id: "q1", prompt: "1. From the ages of 0 to 18 years, what type of community did you grow up in?", choices: ["Urban", "Suburban", "Rural"] },
+      { id: "q2", prompt: "2. What was your average household family income from the ages of 0 to 18? Give your best guess", choices: ["Over $100,000", "$50,000–$100,000", "$0–50,000"] },
+      { id: "q3", prompt: "3. How often were environmental issues highlighted in your school curriculum?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q4", prompt: "4. During this time, how frequently did you or your family try to recycle or reduce waste?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q5", prompt: "5. In your household, how often were environmental concerns emphasized?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q6", prompt: "6. While growing up, how often did your values/religion/culture influence your environmental perceptions?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q7", prompt: "7. In the past two years, how frequently have you engaged in activities relating to the environment?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q8", prompt: "8. How frequently do you currently recycle everyday items?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q9", prompt: "9. How frequently do you engage or participate in listening to environmental concerns?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q10", prompt: "10. How often have you donated or volunteered money or time to environmental concerns in the past two years?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q11", prompt: "11. How often do you consider environmental issues when making decisions on who you vote for?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q12", prompt: "12. How concerned are you about environmental issues today?", choices: ["Very Concerned", "Moderately Concerned", "A Little Concerned", "Not Concerned"] }
     ];
 
     const scoring = {
