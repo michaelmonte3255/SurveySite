@@ -80,20 +80,20 @@
     let currentStep = 0;
     let chartInstance = null;
 
-    // Define the questions and scoring system in a way that is less likely to be flagged
-    const questions = [
-      { k: "q1", t: "1. From the ages of 0 to 18 years, what type of community did you grow up in?", o: ["Urban", "Suburban", "Rural"] },
-      { k: "q2", t: "2. What was your average household family income from the ages of 0 to 18? Give your best guess", o: ["Over $100,000", "$50,000–$100,000", "$0–50,000"] },
-      { k: "q3", t: "3. How often were environmental issues highlighted in your school curriculum?", o: ["Frequently", "Sometimes", "Rarely"] },
-      { k: "q4", t: "4. How frequently did you or your family try to recycle or reduce waste?", o: ["Frequently", "Sometimes", "Rarely"] },
-      { k: "q5", t: "5. In your household, how often were environmental concerns emphasized?", o: ["Frequently", "Sometimes", "Rarely"] },
-      { k: "q6", t: "6. How often did your values/religion/culture influence environmental views?", o: ["Frequently", "Sometimes", "Rarely"] },
-      { k: "q7", t: "7. In the past two years, how often have you engaged in environmental activities?", o: ["Frequently", "Sometimes", "Rarely"] },
-      { k: "q8", t: "8. How frequently do you recycle everyday items now?", o: ["Frequently", "Sometimes", "Rarely"] },
-      { k: "q9", t: "9. How frequently do you listen to environmental concerns?", o: ["Frequently", "Sometimes", "Rarely"] },
-      { k: "q10", t: "10. How often have you donated or volunteered for environmental causes?", o: ["Frequently", "Sometimes", "Rarely"] },
-      { k: "q11", t: "11. Do environmental issues influence your voting decisions?", o: ["Frequently", "Sometimes", "Rarely"] },
-      { k: "q12", t: "12. How concerned are you about the environment today?", o: ["Very Concerned", "Moderately Concerned", "A Little Concerned", "Not Concerned"] }
+    // List of questions and answers that are used in the survey
+    const questionList = [
+      { id: "q1", prompt: "1. From the ages of 0 to 18 years, what type of community did you grow up in?", choices: ["Urban", "Suburban", "Rural"] },
+      { id: "q2", prompt: "2. What was your average household family income from the ages of 0 to 18? Give your best guess", choices: ["Over $100,000", "$50,000–$100,000", "$0–50,000"] },
+      { id: "q3", prompt: "3. How often were environmental issues highlighted in your school curriculum?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q4", prompt: "4. How frequently did you or your family try to recycle or reduce waste?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q5", prompt: "5. In your household, how often were environmental concerns emphasized?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q6", prompt: "6. How often did your values/religion/culture influence environmental views?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q7", prompt: "7. In the past two years, how often have you engaged in environmental activities?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q8", prompt: "8. How frequently do you recycle everyday items now?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q9", prompt: "9. How frequently do you listen to environmental concerns?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q10", prompt: "10. How often have you donated or volunteered for environmental causes?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q11", prompt: "11. Do environmental issues influence your voting decisions?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      { id: "q12", prompt: "12. How concerned are you about the environment today?", choices: ["Very Concerned", "Moderately Concerned", "A Little Concerned", "Not Concerned"] }
     ];
 
     const scoring = {
@@ -136,12 +136,12 @@
       summaryDiv.style.gap = "40px";
       summaryDiv.style.padding = "20px";
 
-      questions.forEach((q) => {
+      questionList.forEach((q) => {
         const counts = {};
-        q.o.forEach(opt => counts[opt] = 0);
+        q.choices.forEach(opt => counts[opt] = 0);
 
         allResponses.forEach(userResp => {
-          const answer = userResp[q.k];
+          const answer = userResp[q.id];
           if (counts[answer] !== undefined) counts[answer]++;
         });
 
@@ -149,7 +149,7 @@
         container.style.textAlign = "center";
 
         const title = document.createElement("h3");
-        title.innerText = q.t;
+        title.innerText = q.prompt;
         title.style.marginBottom = "12px";
         container.appendChild(title);
 
@@ -186,13 +186,13 @@
       form.appendChild(summaryDiv);
     }
 
-    function validateAndStoreAnswer(qKey, index) {
-      const selected = form.querySelector(`input[name="${qKey}"]:checked`);
+    function validateAndStoreAnswer(qId, index) {
+      const selected = form.querySelector(`input[name="${qId}"]:checked`);
       if (!selected) {
         alert("Please select an option before continuing.");
         return false;
       }
-      responses[qKey] = selected.value;
+      responses[qId] = selected.value;
       const value = scoring[selected.value] || 0;
       if (index < 6) pastScore += value;
       else presentScore += value;
@@ -214,7 +214,7 @@
       container.appendChild(summary);
     }
 
-    questions.forEach((q, index) => {
+    questionList.forEach((q, index) => {
       const stepDiv = document.createElement("div");
       stepDiv.classList.add("form-step");
       if (index === 0) stepDiv.classList.add("active");
@@ -223,15 +223,15 @@
       control.classList.add("form-control");
 
       const label = document.createElement("label");
-      label.textContent = q.t;
+      label.textContent = q.prompt;
       control.appendChild(label);
 
-      q.o.forEach(opt => {
+      q.choices.forEach(opt => {
         const wrapper = document.createElement("div");
         wrapper.style.marginBottom = "8px";
         const radio = document.createElement("input");
         radio.type = "radio";
-        radio.name = q.k;
+        radio.name = q.id;
         radio.value = opt;
         const optLabel = document.createElement("label");
         optLabel.appendChild(radio);
@@ -244,13 +244,13 @@
 
       const nextBtn = document.createElement("button");
       nextBtn.type = "button";
-      nextBtn.textContent = index === questions.length - 1 ? "Finish" : "Next";
+      nextBtn.textContent = index === questionList.length - 1 ? "Finish" : "Next";
       nextBtn.addEventListener("click", async () => {
-        const isValid = validateAndStoreAnswer(q.k, index);
+        const isValid = validateAndStoreAnswer(q.id, index);
         if (!isValid) return;
         setTimeout(async () => {
           currentStep++;
-          if (currentStep < questions.length) {
+          if (currentStep < questionList.length) {
             showStep(currentStep);
           } else {
             form.innerHTML = "<h2>Thank you for completing the survey!</h2>";
