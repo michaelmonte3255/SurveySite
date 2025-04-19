@@ -4,16 +4,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Environmental Survey Form</title>
+  <!-- The title of the webpage and the title shown in the website is the following title -->
+  <title>Environmental Survey Form</title> 
   <!-- Firebase SDKs where the data collected from the surveys is stored. -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- The following links is where the databases are stored -->
-  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js is for rendering the pie charts at the end -->
+  <!-- The following links is where the databases are stored and scores stored as well -->
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>  <!-- Firebase core SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script> <!-- Firestore database integration -->
   <!-- The following code is what helps with the styling of the webpage -->
   <style>
     body {
-      background-color: #05c46b;
+      background-color: #05c46b; /* Soft green background for a clean look */
       font-family: Verdana;
       text-align: center;
     }
@@ -21,16 +22,16 @@
       display: none;
     }
     .form-step.active {
-      display: block;
-      background-color: #fff;
-      max-width: 500px;
-      margin: 50px auto;
-      padding: 30px 20px;
-      box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.5);
+      display: block; /* Show the active question */
+      background-color: #fff; /* White background for the form */
+      max-width: 500px;  /* Keep it narrow and focused */
+      margin: 50px auto; /* Vertically spaced and centered */
+      padding: 30px 20px; /* Add breathing room inside */
+      box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.5); /* Drop shadow for depth */
     }
     .form-control {
-      text-align: left;
-      margin-bottom: 25px;
+      text-align: left; /* Left-align question text and options */
+      margin-bottom: 25px;  /* Space is 25 px below each question block */
     }
     .form-control label {
       display: block;
@@ -60,7 +61,7 @@
   <h1>Environmental Survey Form</h1>
   <!-- This is what triggers the survey questions to appear -->
   <form id="form"></form> <!--Questions will be displayed here-->
-  <canvas id="resultsChart" width="400" height="400" style="display:none; margin: 0 auto;"></canvas>
+  <canvas id="resultsChart" width="400" height="400" style="display:none; margin: 0 auto;"></canvas> <!-- Canvas is where all the pie charts will be stored in a 400x400 format -->
 
   <script>
     const firebaseConfig = {
@@ -82,25 +83,33 @@
 
     // List of questions and answers that are used in the survey
     const questionList = [
+      // The first six questions ask about upbringing, inome, and how you were raised when it comes to taking care of the environment
       { id: "q1", prompt: "1. From the ages of 0 to 18 years, what type of community did you grow up in?", choices: ["Urban", "Suburban", "Rural"] },
       { id: "q2", prompt: "2. What was your average household family income from the ages of 0 to 18? Give your best guess", choices: ["Over $100,000", "$50,000–$100,000", "$0–50,000"] },
       { id: "q3", prompt: "3. How often were environmental issues highlighted in your school curriculum?", choices: ["Frequently", "Sometimes", "Rarely"] },
       { id: "q4", prompt: "4. During this time, how frequently did you or your family try to recycle or reduce waste?", choices: ["Frequently", "Sometimes", "Rarely"] },
       { id: "q5", prompt: "5. In your household, how often were environmental concerns emphasized?", choices: ["Frequently", "Sometimes", "Rarely"] },
       { id: "q6", prompt: "6. While growing up, how often did your values/religion/culture influence your environmental perceptions?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      // The next six questions ask about actions and perceptions of the environment today. These questions are based on how you raised.                                                                                                                                           //
       { id: "q7", prompt: "7. In the past two years, how frequently have you engaged in activities relating to the environment?", choices: ["Frequently", "Sometimes", "Rarely"] },
       { id: "q8", prompt: "8. How frequently do you currently recycle everyday items?", choices: ["Frequently", "Sometimes", "Rarely"] },
       { id: "q9", prompt: "9. How frequently do you engage or participate in listening to environmental concerns?", choices: ["Frequently", "Sometimes", "Rarely"] },
       { id: "q10", prompt: "10. How often have you donated or volunteered money or time to environmental concerns in the past two years?", choices: ["Frequently", "Sometimes", "Rarely"] },
       { id: "q11", prompt: "11. How often do you consider environmental issues when making decisions on who you vote for?", choices: ["Frequently", "Sometimes", "Rarely"] },
+      // The last questions asks about overall concern about the environment
       { id: "q12", prompt: "12. How concerned are you about environmental issues today?", choices: ["Very Concerned", "Moderately Concerned", "A Little Concerned", "Not Concerned"] }
     ];
-
+    
+    // Point system for computing environmental awareness scores. Each is weighted an added up
     const scoring = {
-      "Urban": 10, "Suburban": 5, "Rural": 0,
-      "Over $100,000": 10, "$50,000–$100,000": 5, "$0–50,000": 0,
-      "Frequently": 10, "Sometimes": 5, "Rarely": 0,
-      "Very Concerned": 10, "Moderately Concerned": 7, "A Little Concerned": 3, "Not Concerned": 0
+      "Urban": 10, "Suburban": 5, "Rural": 0, // We are assuming that people who were raised in an urban setting have a higher awareness of the envieonment which is
+      // why the weighted score is higher for urban than suburban and rural
+      "Over $100,000": 10, "$50,000–$100,000": 5, "$0–50,000": 0, // We estimate that people will higher income will be more caring of the environment hence the higher weighted score
+      // Lower incomes will recieve a 0 on weighted score
+      "Frequently": 10, "Sometimes": 5, "Rarely": 0, // People who take more frequent action will be weighted a higher score
+      // Not much action will result 0 points added to the score
+      "Very Concerned": 10, "Moderately Concerned": 7, "A Little Concerned": 3, "Not Concerned": 0 // The higher the concern the higher the score will be 
+      // The lower the concern the lower your score will be
     };
 
     const responses = {};
@@ -108,7 +117,7 @@
     let presentScore = 0;
 
     function showStep(index) {
-      const steps = document.querySelectorAll(".form-step");
+      const steps = document.querySelectorAll(".form-step");  // This advances the survey to the current step
       steps.forEach((step, i) => {
         step.classList.toggle("active", i === index);
       });
@@ -125,10 +134,11 @@
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
     }
-
+    
+    // Aggregates and displays chart summaries from all responses
     async function showAllResults() {
-      const snapshot = await db.collection("surveyResponses").get();
-      const allResponses = snapshot.docs.map(doc => doc.data());
+      const snapshot = await db.collection("surveyResponses").get(); // collects all survey responses
+      const allResponses = snapshot.docs.map(doc => doc.data()); // displays responses in the survey
 
       const summaryDiv = document.createElement("div");
       summaryDiv.style.display = "grid";
@@ -142,11 +152,11 @@
 
         allResponses.forEach(userResp => {
           const answer = userResp[q.id];
-          if (counts[answer] !== undefined) counts[answer]++;
+          if (counts[answer] !== undefined) counts[answer]++; // checks whether certain answers exists as a key in the counts object. It it does, the number of answers gets incremented by 1
         });
 
-        const container = document.createElement("div");
-        container.style.textAlign = "center";
+        const container = document.createElement("div"); // the container where all the questions will be stored
+        container.style.textAlign = "center"; // centers the container where the question is on the website
 
         const title = document.createElement("h3");
         title.innerText = q.prompt;
@@ -164,7 +174,7 @@
             labels: Object.keys(counts),
             datasets: [{
               data: Object.values(counts),
-              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"]
+              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"] // Colors that represent the answer choices. Displayed on the pie charts. Colors are in hex format
             }]
           },
           options: {
@@ -185,10 +195,11 @@
       form.appendChild(scoreWrapper);
       form.appendChild(summaryDiv);
     }
-
+     
+    // Saves a single question's answer and updates the score
     function validateAndStoreAnswer(qId, index) {
-      const selected = form.querySelector(`input[name="${qId}"]:checked`);
-      if (!selected) {
+      const selected = form.querySelector(`input[name="${qId}"]:checked`); // checks to see if an answers was selected before hitting next button
+      if (!selected) { // if the user doesnt select an option, it will display the following message
         alert("Please select an option before continuing.");
         return false;
       }
@@ -205,12 +216,14 @@
       summary.style.marginTop = "30px";
       summary.style.textAlign = "center";
       summary.style.gridColumn = "1 / -1";
+      // Displays final score summary after survey submission at the center of the webpage
       summary.innerHTML = `
         <h3>Score Summary</h3>
-        <p><strong>Past Score (Q1–Q6):</strong> ${pastScore} / 60</p>
+        <p><strong>Past Score (Q1–Q6):</strong> ${pastScore} / 60</p>  
         <p><strong>Present Score (Q7–Q12):</strong> ${presentScore} / 60</p>
         <p><strong>Total Score:</strong> ${total} / 120</p>
-      `;
+      `; // The values shown here reflect only the current user's input, not all users combined. The past score is based off the first 6 questions
+      // The last 6 questions make the present score and the total score is the total of the past and present score
       container.appendChild(summary);
     }
 
@@ -219,11 +232,14 @@
       stepDiv.classList.add("form-step");
       if (index === 0) stepDiv.classList.add("active");
 
-      const control = document.createElement("div");
+      // Loop through each survey question and build the form structure step by step
+      const control = document.createElement("div"); // Container to hold the question and its multiple choice answers
       control.classList.add("form-control");
 
-      const label = document.createElement("label");
+      const label = document.createElement("label"); // Label element to show the text of the current question
       label.textContent = q.prompt;
+
+      
       control.appendChild(label);
 
       q.choices.forEach(opt => {
