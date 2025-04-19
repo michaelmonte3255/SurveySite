@@ -5,10 +5,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Environmental Survey Form</title>
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDKs where the data collected from the surveys is stored. -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+  <!-- The following links is where the databases are stored -->
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script> 
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+  <!-- The following code is what helps with the styling of the webpage -->
   <style>
     body {
       background-color: #05c46b;
@@ -54,9 +56,11 @@
 </head>
 
 <body>
+  <!-- Main heading for the page -->
   <h1>Environmental Survey Form</h1>
-  <form id="form"></form>
-  <canvas id="resultsChart" width="400" height="400" style="display:none; margin: 0 auto;"></canvas>
+  <!-- This is what triggers the survey questions to appear-->
+  <form id="form"></form> <!--Questions will be displayed here r-->
+  <canvas id="resultsChart" width="400" height="400" style="display:none; margin: 0 auto;"></canvas> <!-- After all questions are answered, this canvas isd will show the pie chart results in a 400x400 format-->
 
   <script>
     const firebaseConfig = {
@@ -69,34 +73,55 @@
       measurementId: "G-683FNTR2QB"
     };
     firebase.initializeApp(firebaseConfig);
+
+    // Gets a reference to the Firestore database (already initialized above)
     const db = firebase.firestore();
 
-    const form = document.getElementById("form");
-    const canvas = document.getElementById("resultsChart");
+    const form = document.getElementById("form"); // Questions will be stored in this form container
+    const canvas = document.getElementById("resultsChart"); // canvas will hold the charts at the end of the survey
     let currentStep = 0;
     let chartInstance = null;
 
-    const questions = [
-      { key: "q1", text: "1. From the ages of 0 to 18 years, what type of community did you grow up in?", options: ["Urban", "Suburban", "Rural"] },
-      { key: "q2", text: "2. What was your average household family income from the ages of 0 to 18? Give your best guess", options: ["Over $100,000", "$50,000–$100,000", "$0–50,000"] },
-      { key: "q3", text: "3. How often were environmental issues highlighted in your school curriculum?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q4", text: "4. During this time, how frequently did you or your family try to recycle or reduce waste?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q5", text: "5. In your household, how often were environmental concerns emphasized?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q6", text: "6. While growing up, how often did your values/religion/culture influence your environmental perceptions?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q7", text: "7. In the past two years, how frequently have you engaged in activities relating to the environment?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q8", text: "8. How frequently do you currently recycle everyday items?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q9", text: "9. How frequently do you engage or participate in listening to environmental concerns?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q10", text: "10. How often have you donated or volunteered money or time to environmental concerns in the past two years?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q11", text: "11. How often do you consider environmental issues when making decisions on who you vote for?", options: ["Frequently", "Sometimes", "Rarely"] },
-      { key: "q12", text: "12. How concerned are you about environmental issues today?", options: ["Very Concerned", "Moderately Concerned", "A Little Concerned", "Not Concerned"] }
+    const questions = []; // This is the list to manually store the questions
+
+    // First few manually defined
+    questions.push({
+      key: "q1",
+      text: "1. From the ages of 0 to 18 years, what type of community did you grow up in?",
+      options: ["Urban", "Suburban", "Rural"]
+    });
+    questions.push({
+      key: "q2",
+      text: "2. What was your average household family income from the ages of 0 to 18? Give your best guess",
+      options: ["Over $100,000", "$50,000–$100,000", "$0–50,000"]
+    });
+    questions.push({
+      key: "q3",
+      text: "3. How often were environmental issues highlighted in your school curriculum?",
+      options: ["Frequently", "Sometimes", "Rarely"]
+    });
+
+    // Remaining built using loop for variation
+    const rest = [
+      "How frequently did you or your family try to recycle or reduce waste?",
+      "In your household, how often were environmental concerns emphasized?",
+      "While growing up, how often did your values/religion/culture influence your environmental perceptions?",
+      "In the past two years, how frequently have you engaged in activities relating to the environment?",
+      "How frequently do you currently recycle everyday items?",
+      "How frequently do you engage or participate in listening to environmental concerns?",
+      "How often have you donated or volunteered money or time to environmental concerns in the past two years?",
+      "How often do you consider environmental issues when making decisions on who you vote for?",
+      "How concerned are you about environmental issues today?"
     ];
 
-    const scoring = {
-      "Urban": 10, "Suburban": 5, "Rural": 0,
-      "Over $100,000": 10, "$50,000–$100,000": 5, "$0–50,000": 0,
-      "Frequently": 10, "Sometimes": 5, "Rarely": 0,
-      "Very Concerned": 10, "Moderately Concerned": 7, "A Little Concerned": 3, "Not Concerned": 0
-    };
+    rest.forEach((text, i) => {
+      const idx = i + 4;
+      const key = `q${idx}`;
+      const options = key === "q12"
+        ? ["Very Concerned", "Moderately Concerned", "A Little Concerned", "Not Concerned"]
+        : ["Frequently", "Sometimes", "Rarely"];
+      questions.push({ key, text: `${idx}. ${text}`, options });
+    });
 
     const responses = {};
     let pastScore = 0;
@@ -181,7 +206,7 @@
       scoreWrapper.style.marginTop = "40px";
 
       displayScoreSummary(scoreWrapper);
-      form.appendChild(scoreWrapper); // now the score block is centered
+      form.appendChild(scoreWrapper); 
       form.appendChild(summaryDiv); 
     }
 
@@ -191,7 +216,8 @@
         alert("Please select an option before continuing.");
         return false;
       }
-      responses[qKey] = selected.value;
+      // This condition separates early life vs. recent environmental behavior scores
+      responses[qKey] = selected.value; 
       const value = scoring[selected.value] || 0;
       if (index < 6) pastScore += value;
       else presentScore += value;
